@@ -1,4 +1,4 @@
-package pl.edu.agh.ftj.datamaining.weka.algorithm;
+package pl.edu.agh.ftj.datamaining;
 
 import weka.clusterers.Cobweb;
 import weka.clusterers.EM;
@@ -8,7 +8,8 @@ import weka.core.Instances;
 
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
- * @author Bartek
+ * @author Bartłomiej Wojas, Adrian Kremblewski
+ * @version 0.9.1
  */
 public class WekaAlgorithm {
     /**
@@ -50,7 +51,7 @@ public class WekaAlgorithm {
     }
 
     /**
-     * Metoda rozpoczynająca proces przetwarzania. Inicjuje i uruchamia odpowiednie algorytmy.
+     * Metoda rozpoczynająca proces przetwarzania. Inicjuje i uruchamia odpowiednie algorytmy.  
      */
     public void run() {
         switch(algorithmType) {
@@ -82,11 +83,12 @@ public class WekaAlgorithm {
         this.data = data;
     }
 
-    /**
-     * Ustawia opcje dla algorytmu.
-     * Dostępne opcje podane są w dokumentacji każdego z algorytmów.
-     * @param options Opcje wg. których ma działać algorytm.
-     */
+   /**
+    * Ustawia opcje dla algorytmu.
+    * Opis parametrów oraz algorytmów znajduje się na TracWiki projektu.
+    * URL: http://prgzsp.ftj.agh.edu.pl/trac/P3-DataMining/wiki/Algorytmy
+    * @param options Opcje wg. których ma działać algorytm.
+    */
     public void setOptions(String[] options) {
         this.options = options;
     }
@@ -110,7 +112,7 @@ public class WekaAlgorithm {
         try {
             skm.setOptions(options);
             skm.buildClusterer(data);
-
+            //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setAssignments(skm.getAssignments());
             wekaAnswer.setCapabilities(skm.getCapabilities());
             wekaAnswer.setClusterCentroids(skm.getClusterCentroids());
@@ -135,11 +137,11 @@ public class WekaAlgorithm {
     private void runEM() {
         wekaAnswer.setAlgorithmName(algorithms[1]);
         EM em = new EM();
-
+        
         try {
             em.setOptions(options);
             em.buildClusterer(data);
-
+            //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setClusterPriors(em.getClusterPriors());
             wekaAnswer.setClusterModelsNumericAtts(em.getClusterModelsNumericAtts());
             wekaAnswer.setMinStdDev(em.getMinStdDev());
@@ -159,10 +161,20 @@ public class WekaAlgorithm {
     private void runHierarchicalClusterer() {
         wekaAnswer.setAlgorithmName(algorithms[2]);
         HierarchicalClusterer hc = new HierarchicalClusterer();
-
+        
         try {
             hc.setOptions(options);
             hc.buildClusterer(data);
+            //rozpoczęcie budowania obiektu z danymi
+            wekaAnswer.setCapabilities(hc.getCapabilities());
+            wekaAnswer.setDistanceFunction(hc.getDistanceFunction());
+            wekaAnswer.setLinkType(hc.getLinkType());
+            wekaAnswer.setNumClusters(hc.getNumClusters());
+            wekaAnswer.setOptions(options);
+            wekaAnswer.setPrintNewick(hc.getPrintNewick());
+            wekaAnswer.setRevision(hc.getRevision());
+            wekaAnswer.setGraph(hc.graph());
+            wekaAnswer.setGraphType(hc.graphType());
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -174,12 +186,21 @@ public class WekaAlgorithm {
     private void runCobweb() {
         wekaAnswer.setAlgorithmName(algorithms[3]);
         Cobweb cw = new Cobweb();
-
+        
         try {
             cw.setOptions(options);
             cw.buildClusterer(data);
+            //rozpoczęcie budowania obiektu z danymi
+            wekaAnswer.setAcuity(cw.getAcuity());
+            wekaAnswer.setCapabilities(cw.getCapabilities());
+            wekaAnswer.setCutoff(cw.getCutoff());
+            wekaAnswer.setOptions(options);
+            wekaAnswer.setRevision(cw.getRevision());
+            wekaAnswer.setGraph(cw.graph());
+            wekaAnswer.setGraphType(cw.graphType());
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 }
+
