@@ -8,8 +8,8 @@ import weka.core.Instances;
 
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
- * @author Bartłomiej Wojas, Adrian Kremblewski
- * @version 0.9.1
+ * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
+ * @version 0.9.2
  */
 public class WekaAlgorithm {
     /**
@@ -21,7 +21,7 @@ public class WekaAlgorithm {
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
     private int algorithmType = 0;
-
+	
     /**
      * Tablica parametrów wg. których ma funkcjonować algorytm.
      */
@@ -135,6 +135,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm EM.
      */
     private void runEM() {
+		wekaAnswer.setAlgorithmType(2);
         wekaAnswer.setAlgorithmName(algorithms[1]);
         EM em = new EM();
         
@@ -159,6 +160,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm HierarchicalClusterer.
      */
     private void runHierarchicalClusterer() {
+		wekaAnswer.setAlgorithmType(3);
         wekaAnswer.setAlgorithmName(algorithms[2]);
         HierarchicalClusterer hc = new HierarchicalClusterer();
         
@@ -184,6 +186,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm Cobweb.
      */
     private void runCobweb() {
+		wekaAnswer.setAlgorithmType(4);
         wekaAnswer.setAlgorithmName(algorithms[3]);
         Cobweb cw = new Cobweb();
         
