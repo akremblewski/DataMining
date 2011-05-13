@@ -1,136 +1,156 @@
 package pl.edu.agh.ftj.datamaining;
 
-import weka.core.Capabilities;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import weka.core.DistanceFunction;
+import weka.core.EuclideanDistance;
 import weka.core.Instances;
-import weka.core.SelectedTag;
+import weka.core.converters.ArffLoader.ArffReader;
 
 /**
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski
- * @version 0.9.0
+ * @version 0.9.1
  */
 public class WekaAnswer {
     /**
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
-    private int algorithmType;
+    private int algorithmType = -1;
     
     /**
      * Nazwa użytego algorytmu.
      */
-    private String algorithmName;
+    private String algorithmName = null;
 
     /**
      * Tablica indeksów pozwalających powiązać środki klastrów z poszczególnymi instancjami.
      */
-    private int[] assignments;
+    private int[] assignments = null;
 
-    /**
-     * Standardowe możliwości jakie posiada wybrany typ algorytmu.
-     */
-    private Capabilities capabilities;
+//    /**
+//     * Standardowe możliwości jakie posiada wybrany typ algorytmu.
+//     */
+//    private Capabilities capabilities = null;
 
     /**
      * Zbiór instancji będących środkami wszystkich wyznaczonych klastrów.
      */
-    private Instances clusterCentroids;
+    private String clusterCentroids = null;
 
     /**
      * Liczba częstotliwości występowania wartości dla poszczególnych atrybutów.
      */
-    private int[][][] clusterNominalCounts;
+    private int[][][] clusterNominalCounts = null;
 
     /**
      * Tablica z liczbami instancji w klastrach.
      */
-    private int[] clusterSizes;
+    private int[] clusterSizes = null;
 
     /**
      * Odchylenia standardowe atrybutow numerycznych w klastrach.
      */
-    private Instances clusterStandardDevs;
+    private String clusterStandardDevs = null;
 
     /**
-     * Obiekt z funkcja dystansu.
+     * Przechowuje dane instancji dla obiektu funkcji dystansu.
      */
-    private DistanceFunction distanceFunction;
+    private String instancesForDistanceFunction = null;
+
+    /**
+     * Przechowuje atrybuty dla obiektu funkcji dystansu.
+     */
+    private String attributeIndicesForDistanceFunction = null;
+
+    /**
+     * Przechowuje informację dla obiektu funkcji dystansu dotyczącą indeksów atrybutów.
+     */
+    private boolean invertSelectionForDistanceFunction = false;
+
+    /**
+     * Przechowuje opcje dla obiektu funkcji dystnasu.
+     */
+    private String[] optionsForDistanseFunction = null;
 
     /**
      * Maksymalna liczba iteracji.
      */
-    private int maxIterations;
+    private int maxIterations = -1;
 
     /**
      * Liczba klastrow do wygenerowania.
      */
-    private int numClusters;
+    private int numClusters = -1;
 
     /**
      * Opcje wg. których działał algorytm.
      */
-    private String[] options;
+    private String[] options = null;
 
     /**
      * Łańcuch z rewizją.
      */
-    private String revision;
+    private String revision = null;
 
     /**
      * Blad kwadratowy. NaN jesli jest uzywana szybka kalkulacja dystansow.
      */
-    private double squaredError;
+    private double squaredError = -1.;
 
     /**
      * Liczba klastrów.
      */
-    private int numberOfClusters;
+    private int numberOfClusters = -1;
 
     /**
      * Poprzedniki[priors](?) klastrów
      */
-    private double[] clusterPriors;
+    private double[] clusterPriors = null;
 
     /**
      * Rozkłady normalne dla modeli klastra.
      */
-    private double[][][] clusterModelsNumericAtts;
+    private double[][][] clusterModelsNumericAtts = null;
 
     /**
      * Minimalne dopuszczalne odchylenie standardowe.
      */
-    private double minStdDev;
+    private double minStdDev = -1;
     
     /**
      * 
      */
-    private double acuity;
+    private double acuity = -1.;
     
     /**
      * 
      */
-    private double cutoff;
+    private double cutoff = -1.;
     
     /**
      * 
      */
-    private String graph;
+    private String graph = null;
     
     /**
      * 
      */
-    private int graphType;
+    private int graphType = -1;
+    
+//    /**
+//     *
+//     */
+//    private SelectedTag linkType = null;
     
     /**
      * 
      */
-    private SelectedTag linkType;
-    
-    /**
-     * 
-     */
-    private boolean printNewick;
+    private boolean printNewick = false;
+
+    ////////////////////////////////////////////////////////////////////////////
 
     /**
     * Zwraca tablice indeksow pozwalajacych powiazac srodki klastrow z poszczegolnymi instancjami.
@@ -148,28 +168,39 @@ public class WekaAnswer {
         this.assignments = assignments;
     }
 
-    /**
-     * Zwraca obiekt z możliwościami jakie posiada użyty typ algorytmu.
-     * @return Obiekt możliwości.
-     */
-    public Capabilities getCapabilities() {
-        return capabilities;
-    }
+//    /**
+//     * Zwraca obiekt z możliwościami jakie posiada użyty typ algorytmu.
+//     * @return Obiekt możliwości.
+//     */
+//    public Capabilities getCapabilities() {
+//        return capabilities;
+//    }
 
-    /**
-     * Ustawia możliwości jakie posiadał użyty typ algorytmu.
-     * @param capabilities Obiekt z możliwościami użytego algorytmu.
-     */
-    public void setCapabilities(Capabilities capabilities) {
-        this.capabilities = capabilities;
-    }
+//    /**
+//     * Ustawia możliwości jakie posiadał użyty typ algorytmu.
+//     * @param capabilities Obiekt z możliwościami użytego algorytmu.
+//     */
+//    public void setCapabilities(Capabilities capabilities) {
+//        this.capabilities = capabilities;
+//    }
 
     /**
     * Oblicza i zwraca srodki wszystkich znalezionych klastrow w postaci zbioru instacji.
     * @return Zbior instancji bedacych srodkami wszystkich wyznaczonych klastrow.
     */
     public Instances getClusterCentroids() {
-        return clusterCentroids;
+        if(clusterCentroids != null) {
+            BufferedReader reader = new BufferedReader(new StringReader(clusterCentroids));
+            ArffReader arff = null;
+            try {
+                arff = new ArffReader(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return arff.getData();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -177,7 +208,8 @@ public class WekaAnswer {
      * @param clusterCentroids Instacje będące środkami klastrów.
      */
     public void setClusterCentroids(Instances clusterCentroids) {
-        this.clusterCentroids = clusterCentroids;
+        if(clusterCentroids != null)
+            this.clusterCentroids = clusterCentroids.toString();
     }
 
     /**
@@ -217,7 +249,18 @@ public class WekaAnswer {
     * @return Odchylenia standardowe atrybutow numerycznych w klastrach
     */
     public Instances getClusterStandardDevs() {
-        return clusterStandardDevs;
+        if(clusterStandardDevs != null) {
+            BufferedReader reader = new BufferedReader(new StringReader(clusterStandardDevs));
+            ArffReader arff = null;
+            try {
+                arff = new ArffReader(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return arff.getData();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -225,7 +268,8 @@ public class WekaAnswer {
      * @param clusterStandardDevs Odchylenia standardowe atrybutow numerycznych w klastrach.
      */
     public void setClusterStandardDevs(Instances clusterStandardDevs) {
-        this.clusterStandardDevs = clusterStandardDevs;
+        if(clusterStandardDevs != null)
+            this.clusterStandardDevs = clusterStandardDevs.toString();
     }
 
     /**
@@ -233,7 +277,18 @@ public class WekaAnswer {
     * @return Obiekt zawierajacy m.in. funkcje dystansu, wszystkie instancje, a takze pozwalajacy na obliczenie odleglosci miedzy poszczegolnymi instancjami.
     */
     public DistanceFunction getDistanceFunction() {
-        return distanceFunction;
+        DistanceFunction d = new EuclideanDistance();
+        d.setAttributeIndices(attributeIndicesForDistanceFunction);
+        BufferedReader reader = new BufferedReader(new StringReader(instancesForDistanceFunction));
+        ArffReader arff = null;
+        try {
+            arff = new ArffReader(reader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        d.setInstances(arff.getData());
+        d.setInvertSelection(invertSelectionForDistanceFunction);
+        return d;
     }
 
     /**
@@ -241,7 +296,12 @@ public class WekaAnswer {
      * @param distanceFunction Obiekt z funkcją dystansu.
      */
     public void setDistanceFunction(DistanceFunction distanceFunction) {
-        this.distanceFunction = distanceFunction;
+        this.instancesForDistanceFunction = distanceFunction.getInstances().toString();
+        this.attributeIndicesForDistanceFunction = distanceFunction.getAttributeIndices();
+        this.invertSelectionForDistanceFunction = distanceFunction.getInvertSelection();
+        this.optionsForDistanseFunction = distanceFunction.getOptions().clone();
+
+       // this.distanceFunction = distanceFunction;
     }
 
     /**
@@ -480,19 +540,19 @@ public class WekaAnswer {
         this.graphType = graphType;
     }
 
-    /**
-     * @return the linkType
-     */
-    public SelectedTag getLinkType() {
-        return linkType;
-    }
-
-    /**
-     * @param linkType the linkType to set
-     */
-    public void setLinkType(SelectedTag linkType) {
-        this.linkType = linkType;
-    }
+//    /**
+//     * @return the linkType
+//     */
+//    public SelectedTag getLinkType() {
+//        return linkType;
+//    }
+//
+//    /**
+//     * @param linkType the linkType to set
+//     */
+//    public void setLinkType(SelectedTag linkType) {
+//        this.linkType = linkType;
+//    }
 
     /**
      * @return the printNewick

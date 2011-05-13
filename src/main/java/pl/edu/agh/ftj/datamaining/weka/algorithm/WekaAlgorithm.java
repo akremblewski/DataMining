@@ -8,7 +8,7 @@ import weka.core.Instances;
 
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
- * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
+ * @author Bartłomiej Wojas, Adrian Kremblewski
  * @version 0.9.2
  */
 public class WekaAlgorithm {
@@ -21,7 +21,7 @@ public class WekaAlgorithm {
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
     private int algorithmType = 0;
-	
+
     /**
      * Tablica parametrów wg. których ma funkcjonować algorytm.
      */
@@ -114,7 +114,7 @@ public class WekaAlgorithm {
             skm.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setAssignments(skm.getAssignments());
-            wekaAnswer.setCapabilities(skm.getCapabilities());
+//            wekaAnswer.setCapabilities(skm.getCapabilities());
             wekaAnswer.setClusterCentroids(skm.getClusterCentroids());
             wekaAnswer.setClusterNominalCounts(skm.getClusterNominalCounts());
             wekaAnswer.setClusterSizes(skm.getClusterSizes());
@@ -135,7 +135,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm EM.
      */
     private void runEM() {
-		wekaAnswer.setAlgorithmType(2);
+        wekaAnswer.setAlgorithmType(2);
         wekaAnswer.setAlgorithmName(algorithms[1]);
         EM em = new EM();
         
@@ -146,7 +146,7 @@ public class WekaAlgorithm {
             wekaAnswer.setClusterPriors(em.getClusterPriors());
             wekaAnswer.setClusterModelsNumericAtts(em.getClusterModelsNumericAtts());
             wekaAnswer.setMinStdDev(em.getMinStdDev());
-            wekaAnswer.setCapabilities(em.getCapabilities());
+//            wekaAnswer.setCapabilities(em.getCapabilities());
             wekaAnswer.setMaxIterations(em.getMaxIterations());
             wekaAnswer.setNumClusters(em.getNumClusters());
             wekaAnswer.setOptions(em.getOptions());
@@ -160,7 +160,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm HierarchicalClusterer.
      */
     private void runHierarchicalClusterer() {
-		wekaAnswer.setAlgorithmType(3);
+        wekaAnswer.setAlgorithmType(3);
         wekaAnswer.setAlgorithmName(algorithms[2]);
         HierarchicalClusterer hc = new HierarchicalClusterer();
         
@@ -168,9 +168,9 @@ public class WekaAlgorithm {
             hc.setOptions(options);
             hc.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
-            wekaAnswer.setCapabilities(hc.getCapabilities());
+//            wekaAnswer.setCapabilities(hc.getCapabilities());
             wekaAnswer.setDistanceFunction(hc.getDistanceFunction());
-            wekaAnswer.setLinkType(hc.getLinkType());
+//            wekaAnswer.setLinkType(hc.getLinkType());
             wekaAnswer.setNumClusters(hc.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setPrintNewick(hc.getPrintNewick());
@@ -186,7 +186,7 @@ public class WekaAlgorithm {
      * Uruchamia algorytm Cobweb.
      */
     private void runCobweb() {
-		wekaAnswer.setAlgorithmType(4);
+        wekaAnswer.setAlgorithmType(4);
         wekaAnswer.setAlgorithmName(algorithms[3]);
         Cobweb cw = new Cobweb();
         
@@ -195,7 +195,7 @@ public class WekaAlgorithm {
             cw.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setAcuity(cw.getAcuity());
-            wekaAnswer.setCapabilities(cw.getCapabilities());
+//            wekaAnswer.setCapabilities(cw.getCapabilities());
             wekaAnswer.setCutoff(cw.getCutoff());
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(cw.getRevision());
@@ -206,4 +206,3 @@ public class WekaAlgorithm {
         }
     }
 }
-
