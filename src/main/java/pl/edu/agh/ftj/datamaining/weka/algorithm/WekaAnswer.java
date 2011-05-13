@@ -11,7 +11,7 @@ import weka.core.converters.ArffLoader.ArffReader;
 /**
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
- * @author Bartłomiej Wojas, Adrian Kremblewski
+ * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
  * @version 0.9.1
  */
 public class WekaAnswer {
