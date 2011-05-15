@@ -4,8 +4,8 @@
 
 	<groupId>pl.edu.agh.ftj.datamaining</groupId>
 	<artifactId>weka</artifactId>
-	<version>1.0</version>
-	<packaging>war</packaging>
+	<version>1.1</version>
+	<packaging>jar</packaging>
 	<name>DataMining Project - Weka</name>
 	<url>http://prgzsp.ftj.agh.edu.pl/trac/P3-DataMining</url>
 

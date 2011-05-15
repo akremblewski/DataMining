@@ -4,12 +4,13 @@ import weka.clusterers.Cobweb;
 import weka.clusterers.EM;
 import weka.clusterers.HierarchicalClusterer;
 import weka.clusterers.SimpleKMeans;
+import weka.clusterers.FarthestFirst;
 import weka.core.Instances;
 
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.4
+ * @version 0.9.5
  */
 public class WekaAlgorithm {
     /**
@@ -18,7 +19,7 @@ public class WekaAlgorithm {
     private Instances data = null;
 
     /**
-     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
+     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst
      */
     private int algorithmType = 0;
 
@@ -39,7 +40,8 @@ public class WekaAlgorithm {
         "SimpleKMeans",
         "EM",
         "HierarchicalClusterer",
-        "Cobweb"
+        "Cobweb",
+        "FarthestFirst"
     };
 
     /**
@@ -62,6 +64,8 @@ public class WekaAlgorithm {
             case 3: runHierarchicalClusterer();
                     break;
             case 4: runCobweb();
+                    break;
+            case 5: runFarthestFirst();
                     break;
             default: wekaAnswer.setAlgorithmName("Unknown");
         }
@@ -205,4 +209,25 @@ public class WekaAlgorithm {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Uruchamia algorytm FarthestFirst.
+     */
+    private void runFarthestFirst(){
+         wekaAnswer.setAlgorithmName(algorithms[4]);
+        FarthestFirst ff = new FarthestFirst();
+
+        try {
+            ff.setOptions(options);
+            ff.buildClusterer(data);
+            //rozpoczęcie budowania obiektu z danymi
+            wekaAnswer.setNumClusters(ff.getNumClusters());
+            wekaAnswer.setOptions(options);
+            wekaAnswer.setRevision(ff.getRevision());
+            wekaAnswer.setNumberOfClusters(ff.numberOfClusters());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
