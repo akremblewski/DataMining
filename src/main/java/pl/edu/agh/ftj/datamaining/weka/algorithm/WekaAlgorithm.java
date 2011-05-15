@@ -1,4 +1,4 @@
-package pl.edu.agh.ftj.datamaining;
+package pl.edu.agh.ftj.datamining.weka.algorithm;
 
 import weka.clusterers.Cobweb;
 import weka.clusterers.EM;
@@ -9,7 +9,7 @@ import weka.core.Instances;
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.3
+ * @version 0.9.4
  */
 public class WekaAlgorithm {
     /**
@@ -35,7 +35,7 @@ public class WekaAlgorithm {
     /**
      * Tablica z nazwami udostępnianych algorytmów
      */
-    private String[] algorithms = {
+    private static final String[] algorithms = {
         "SimpleKMeans",
         "EM",
         "HierarchicalClusterer",
@@ -51,7 +51,7 @@ public class WekaAlgorithm {
     }
 
     /**
-     * Metoda rozpoczynająca proces przetwarzania. Inicjuje i uruchamia odpowiednie algorytmy.  
+     * Metoda rozpoczynająca proces przetwarzania. Inicjuje i uruchamia odpowiednie algorytmy.
      */
     public void run() {
         switch(algorithmType) {
@@ -97,7 +97,7 @@ public class WekaAlgorithm {
      * Metoda zwracająca dostępne nazwy algorytmów.
      * @return Tablica z nazwami algorytmów.
      */
-    public String[] getAlgorithms() {
+    public static String[] getAlgorithms() {
         return algorithms;
     }
 
@@ -138,7 +138,7 @@ public class WekaAlgorithm {
         wekaAnswer.setAlgorithmType(2);
         wekaAnswer.setAlgorithmName(algorithms[1]);
         EM em = new EM();
-        
+
         try {
             em.setOptions(options);
             em.buildClusterer(data);
@@ -163,7 +163,7 @@ public class WekaAlgorithm {
         wekaAnswer.setAlgorithmType(3);
         wekaAnswer.setAlgorithmName(algorithms[2]);
         HierarchicalClusterer hc = new HierarchicalClusterer();
-        
+
         try {
             hc.setOptions(options);
             hc.buildClusterer(data);
@@ -189,7 +189,7 @@ public class WekaAlgorithm {
         wekaAnswer.setAlgorithmType(4);
         wekaAnswer.setAlgorithmName(algorithms[3]);
         Cobweb cw = new Cobweb();
-        
+
         try {
             cw.setOptions(options);
             cw.buildClusterer(data);

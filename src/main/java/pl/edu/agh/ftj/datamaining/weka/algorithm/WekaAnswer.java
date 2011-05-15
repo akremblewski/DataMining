@@ -1,4 +1,4 @@
-package pl.edu.agh.ftj.datamaining;
+package pl.edu.agh.ftj.datamining.weka.algorithm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,14 +12,14 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.1
+ * @version 0.9.2
  */
 public class WekaAnswer {
     /**
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
     private int algorithmType = -1;
-    
+
     /**
      * Nazwa użytego algorytmu.
      */
@@ -119,34 +119,34 @@ public class WekaAnswer {
      * Minimalne dopuszczalne odchylenie standardowe.
      */
     private double minStdDev = -1;
-    
+
     /**
-     * 
+     *
      */
     private double acuity = -1.;
-    
+
     /**
-     * 
+     *
      */
     private double cutoff = -1.;
-    
+
     /**
-     * 
+     *
      */
     private String graph = null;
-    
+
     /**
-     * 
+     *
      */
     private int graphType = -1;
-    
+
 //    /**
 //     *
 //     */
 //    private SelectedTag linkType = null;
-    
+
     /**
-     * 
+     *
      */
     private boolean printNewick = false;
 
@@ -471,7 +471,7 @@ public class WekaAnswer {
      */
     @Override
     public String toString() {
-        return "Algorithm: " + algorithmType + "; Name: " + algorithmName;
+        return "Algorithm: " + algorithmType + "; Name: " + getAlgorithmName();
     }
 
     /**
@@ -481,7 +481,7 @@ public class WekaAnswer {
     public void setAlgorithmName(String algorithmName) {
         this.algorithmName = algorithmName;
     }
-    
+
 /* --- Cobweb, HierarchicalClusterer --- */
 
     /**
@@ -566,6 +566,13 @@ public class WekaAnswer {
      */
     public void setPrintNewick(boolean printNewick) {
         this.printNewick = printNewick;
+    }
+
+    /**
+     * @return the algorithmName
+     */
+    public String getAlgorithmName() {
+        return algorithmName;
     }
 
 }
