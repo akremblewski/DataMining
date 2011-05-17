@@ -10,7 +10,7 @@ import weka.core.Instances;
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.5
+ * @version 0.9.6
  */
 public class WekaAlgorithm {
     /**
@@ -153,7 +153,7 @@ public class WekaAlgorithm {
 //            wekaAnswer.setCapabilities(em.getCapabilities());
             wekaAnswer.setMaxIterations(em.getMaxIterations());
             wekaAnswer.setNumClusters(em.getNumClusters());
-            wekaAnswer.setOptions(em.getOptions());
+            wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(em.getRevision());
         } catch(Exception e) {
             e.printStackTrace();
@@ -209,12 +209,13 @@ public class WekaAlgorithm {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Uruchamia algorytm FarthestFirst.
      */
     private void runFarthestFirst(){
-         wekaAnswer.setAlgorithmName(algorithms[4]);
+        wekaAnswer.setAlgorithmType(5);
+        wekaAnswer.setAlgorithmName(algorithms[4]);
         FarthestFirst ff = new FarthestFirst();
 
         try {
@@ -229,5 +230,5 @@ public class WekaAlgorithm {
             e.printStackTrace();
         }
     }
-    
+
 }
