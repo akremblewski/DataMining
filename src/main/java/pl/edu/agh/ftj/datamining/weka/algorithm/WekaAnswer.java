@@ -12,13 +12,19 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.2
+ * @version 0.9.3
  */
 public class WekaAnswer {
     /**
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
     private int algorithmType = -1;
+
+    /**
+     * Informacja o błędach lub o poprawności wykonanego algorytmu. Jeżeli jest ok w info znajdzie się string 'ok'
+     * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
+     */
+    private String info;
 
     /**
      * Nazwa użytego algorytmu.
@@ -573,6 +579,20 @@ public class WekaAnswer {
      */
     public String getAlgorithmName() {
         return algorithmName;
+    }
+
+    /**
+     * @return the info
+     */
+    public String getInfo() {
+        return info;
+    }
+
+    /**
+     * @param info the info to set
+     */
+    public void setInfo(String info) {
+        this.info = info;
     }
 
 }
