@@ -12,7 +12,7 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.3
+ * @version 0.9.4
  */
 public class WekaAnswer {
     /**
@@ -24,7 +24,13 @@ public class WekaAnswer {
      * Informacja o błędach lub o poprawności wykonanego algorytmu. Jeżeli jest ok w info znajdzie się string 'ok'
      * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
      */
-    private String info;
+    private String info = null;
+
+    /**
+     * Przechowuje informację o tym, czy obiekt WekaAnswer został poprawnie utworzony (wartość true).
+     * Jeśli wystąpił błąd (wartość false) wtedy wszystkie pola klasy będą puste.
+     */
+    private boolean correct = true;
 
     /**
      * Nazwa użytego algorytmu.
@@ -585,6 +591,9 @@ public class WekaAnswer {
      * @return the info
      */
     public String getInfo() {
+        if(info == null) {
+            info = "\n==== WekaAnswer informations ====\n";
+        }
         return info;
     }
 
@@ -595,4 +604,19 @@ public class WekaAnswer {
         this.info = info;
     }
 
+    /**
+     * Zwraca informację o poprawności obiektu WekaAnswer.
+     * @return TRUE - jeśli obiekt został utworzony poprawnie. FALSE - w przeciwnym przypadku.
+     */
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    /**
+     * Ustawia parametr informujący o poprawności obiektu.
+     * @param value TRUE - jeśli obiekt poprawny, FALSE - w przeciwnym przypadku.
+     */
+    public void setCorrect(boolean value) {
+        correct = value;
+    }
 }
