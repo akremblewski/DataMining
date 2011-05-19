@@ -16,7 +16,7 @@ import weka.core.converters.ArffLoader.ArffReader;
  */
 public class WekaAnswer {
     /**
-     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
+     * Typ algorytmu jaki ma zostać użyty. Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst.
      */
     private int algorithmType = -1;
 
@@ -63,7 +63,7 @@ public class WekaAnswer {
     private int[] clusterSizes = null;
 
     /**
-     * Odchylenia standardowe atrybutow numerycznych w klastrach.
+     * Odchylenia standardowe atrybutów numerycznych w klastrach.
      */
     private String clusterStandardDevs = null;
 
@@ -93,7 +93,7 @@ public class WekaAnswer {
     private int maxIterations = -1;
 
     /**
-     * Liczba klastrow do wygenerowania.
+     * Liczba klastrów do wygenerowania.
      */
     private int numClusters = -1;
 
@@ -108,7 +108,7 @@ public class WekaAnswer {
     private String revision = null;
 
     /**
-     * Blad kwadratowy. NaN jesli jest uzywana szybka kalkulacja dystansow.
+     * Błąd kwadratowy. NaN jeśli jest używana szybka kalkulacja dystansów.
      */
     private double squaredError = -1.;
 
@@ -118,7 +118,7 @@ public class WekaAnswer {
     private int numberOfClusters = -1;
 
     /**
-     * Poprzedniki[priors](?) klastrów
+     * Poprzedniki[priors](?) klastrów.
      */
     private double[] clusterPriors = null;
 
@@ -165,7 +165,7 @@ public class WekaAnswer {
     ////////////////////////////////////////////////////////////////////////////
 
     /**
-    * Zwraca tablice indeksow pozwalajacych powiazac srodki klastrow z poszczegolnymi instancjami.
+    * Zwraca tablicę indeksów pozwalających powiązać środki klastrów z poszczególnymi instancjami.
     * @return Tablica indeksów.
     */
     public int[] getAssignments() {
@@ -173,7 +173,7 @@ public class WekaAnswer {
     }
 
     /**
-     * Ustawia tablice indeksow pozwalajacych powiazac srodki klastrow z poszczegolnymi instancjami.
+     * Ustawia tablicę indeksów pozwalających powiązać środki klastrów z poszczególnymi instancjami.
      * @param assignments Tablica indeksów.
      */
     public void setAssignments(int[] assignments) {
@@ -197,8 +197,8 @@ public class WekaAnswer {
 //    }
 
     /**
-    * Oblicza i zwraca srodki wszystkich znalezionych klastrow w postaci zbioru instacji.
-    * @return Zbior instancji bedacych srodkami wszystkich wyznaczonych klastrow.
+    * Oblicza i zwraca środki wszystkich znalezionych klastrów w postaci zbioru instacji.
+    * @return Zbiór instancji bądących środkami wszystkich wyznaczonych klastrów.
     */
     public Instances getClusterCentroids() {
         if(clusterCentroids != null) {
@@ -225,23 +225,23 @@ public class WekaAnswer {
     }
 
     /**
-    * Dla kazdego klastra zwraca liczbe czestotliwosci wystepowania wartosci dla poszczegolnych atrybutow.
-    * @return Liczby czestotliwosci.
+    * Dla każdego klastra zwraca liczbę częstotliwości występowania wartości dla poszczególnych atrybutów.
+    * @return Liczby częstotliwości.
     */
     public int[][][] getClusterNominalCounts() {
         return clusterNominalCounts;
     }
 
     /**
-     * Ustawia liczbe czestotliwosci wystepowania wartosci dla poszczegolnych atrybutow.
-     * @param clusterNominalCounts Liczby czestotliwosci.
+     * Ustawia liczbę częstotliwości występowania wartości dla poszczególnych atrybutów.
+     * @param clusterNominalCounts Liczby częstotliwości.
      */
     public void setClusterNominalCounts(int[][][] clusterNominalCounts) {
         this.clusterNominalCounts = clusterNominalCounts;
     }
 
     /**
-    * Zwraca tablice, ktorej elementy to liczby instancji w kazdym z klastrow.
+    * Zwraca tablicę, której elementy to liczby instancji w każdym z klastrów.
     * @return Tablica z liczbami instancji w klastrach.
     */
     public int[] getClusterSizes() {
@@ -249,7 +249,7 @@ public class WekaAnswer {
     }
 
     /**
-     * Ustawia tablice, ktorej elementy to liczby instancji w kazdym z klastrow.
+     * Ustawia tablicę, której elementy to liczby instancji w każdym z klastrów.
      * @param clusterSizes tablica z liczbami instancji.
      */
     public void setClusterSizes(int[] clusterSizes) {
@@ -257,8 +257,8 @@ public class WekaAnswer {
     }
 
     /**
-    * Zwraca odchylenia standardowe atrybutow numerycznych w kazdym klastrze.
-    * @return Odchylenia standardowe atrybutow numerycznych w klastrach
+    * Zwraca odchylenia standardowe atrybutów numerycznych w każdym klastrze.
+    * @return Odchylenia standardowe atrybutów numerycznych w klastrach
     */
     public Instances getClusterStandardDevs() {
         if(clusterStandardDevs != null) {
@@ -276,8 +276,8 @@ public class WekaAnswer {
     }
 
     /**
-     * Ustawia odchylenia standardowe atrybutow numerycznych w kazdym klastrze.
-     * @param clusterStandardDevs Odchylenia standardowe atrybutow numerycznych w klastrach.
+     * Ustawia odchylenia standardowe atrybutów numerycznych w każdym klastrze.
+     * @param clusterStandardDevs Odchylenia standardowe atrybutów numerycznych w klastrach.
      */
     public void setClusterStandardDevs(Instances clusterStandardDevs) {
         if(clusterStandardDevs != null)
@@ -285,8 +285,8 @@ public class WekaAnswer {
     }
 
     /**
-    * Pobiera funkcje odleglosci, ktora jest aktualnie w uzyciu.
-    * @return Obiekt zawierajacy m.in. funkcje dystansu, wszystkie instancje, a takze pozwalajacy na obliczenie odleglosci miedzy poszczegolnymi instancjami.
+    * Pobiera funkcję odleglości, która jest aktualnie w użyciu.
+    * @return Obiekt zawierający m.in. funkcje dystansu, wszystkie instancje, a także pozwalający na obliczenie odleglości między poszczególnymi instancjami.
     */
     public DistanceFunction getDistanceFunction() {
         DistanceFunction d = new EuclideanDistance();
@@ -317,7 +317,7 @@ public class WekaAnswer {
     }
 
     /**
-    * Zwraca maksymalna liczbe interacji jakie moga byc wykonane.
+    * Zwraca maksymalną liczbę iteracji jakie mogą być wykonane.
     * @return Maksymalna liczba iteracji.
     */
     public int getMaxIterations() {
@@ -325,7 +325,7 @@ public class WekaAnswer {
     }
 
     /**
-     * Ustawia maksymalna liczbe interacji jakie moga byc wykonane.
+     * Ustawia maksymalną liczbę iteracji jakie mogą być wykonane.
      * @param maxIterations Maksymalna liczba iteracji.
      */
     public void setMaxIterations(int maxIterations) {
@@ -334,7 +334,7 @@ public class WekaAnswer {
 
     /**
     * Zwraca liczbę klastrów do wygenerowania.
-    * @return Liczba klastrow do wygenerowania.
+    * @return Liczba klastrów do wygenerowania.
     */
     public int getNumClusters() {
         return numClusters;
@@ -365,7 +365,7 @@ public class WekaAnswer {
     }
 
     /**
-    * Zwraca lancuch z rewizja.
+    * Zwraca łancuch z rewizją.
     * @return Rewizja.
     */
     public String getRevision() {
@@ -381,8 +381,8 @@ public class WekaAnswer {
     }
 
     /**
-     * Zwraca typ algorytmu jaki zostal uzyty.
-     * Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
+     * Zwraca typ algorytmu jaki został użyty.
+     * Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst.
      * @return Typ algorytmu.
      */
     public int getAlgorithmType() {
@@ -398,8 +398,8 @@ public class WekaAnswer {
     }
 
     /**
-    * Zwraca liczbe wyznaczonych klastrow.
-    * @return Liczba klastrow.
+    * Zwraca liczbe wyznaczonych klastrów.
+    * @return Liczba klastrów.
     */
     public int getNumberOfClusters() {
         return numberOfClusters;
@@ -414,15 +414,15 @@ public class WekaAnswer {
     }
 
     /**
-    * Zwraca blad kwadratowy dla wszystkich klastrow.
-    * @return Blad kwadratowy. NaN jesli jest uzywana szybka kalkulacja dystansow.
+    * Zwraca błąd kwadratowy dla wszystkich klastrów.
+    * @return Błąd kwadratowy. NaN jeśli jest używana szybka kalkulacja dystansów.
     */
     public double getSquaredError() {
         return squaredError;
     }
 
     /**
-     * Ustawia blad kwadratowy dla wszystkich klastrow.
+     * Ustawia błąd kwadratowy dla wszystkich klastrów.
      * @param squaredError Błąd kwadratowy dla wszystkich klastrów.
      */
     public void setSquaredError(double squaredError) {
