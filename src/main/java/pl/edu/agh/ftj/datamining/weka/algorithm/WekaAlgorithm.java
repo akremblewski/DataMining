@@ -8,7 +8,7 @@ import weka.clusterers.FarthestFirst;
 import weka.core.Instances;
 
 /**
- * Klasa odpowiedzialna za komunikacje z biblioteka Weki
+ * Klasa odpowiedzialna za komunikację z biblioteką Weki.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
  * @version 0.9.7
  */
@@ -19,7 +19,7 @@ public class WekaAlgorithm {
     private Instances data = null;
 
     /**
-     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst
+     * Typ algorytmu jaki ma zostać użyty. Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst
      */
     private int algorithmType = 0;
 
@@ -29,7 +29,7 @@ public class WekaAlgorithm {
     private String[] options;
 
     /**
-     * Obiekt zawierajace dane zwracajane przez Weke
+     * Obiekt zawierajacy dane zwracane przez Wekę.
      */
     private WekaAnswer wekaAnswer = new WekaAnswer();
 
@@ -40,12 +40,12 @@ public class WekaAlgorithm {
 
     /**
      * Przechowuje informację o tym czy podczas wykonywania algorytmów
-     * doszło do błędu (false) czy też nie (true);
+     * doszło do błędu (false) czy też nie (true).
      */
     private boolean correct = true;
 
     /**
-     * Tablica z nazwami udostępnianych algorytmów
+     * Tablica z nazwami udostępnianych algorytmów.
      */
     private static final String[] algorithms = {
         "SimpleKMeans",
@@ -100,8 +100,8 @@ public class WekaAlgorithm {
     }
 
     /**
-     * Metoda ustawiająca typ algorytmu jaki ma zostać użyty
-     * @param algorithmType Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
+     * Metoda ustawiająca typ algorytmu jaki ma zostać użyty.
+     * @param algorithmType Typ algorytmu jaki ma zostać użyty. Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst.
      */
     public void setAlgorithmType(int algorithmType) {
         this.algorithmType = algorithmType;
