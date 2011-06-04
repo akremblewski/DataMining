@@ -8,9 +8,9 @@ import weka.clusterers.FarthestFirst;
 import weka.core.Instances;
 
 /**
- * Klasa odpowiedzialna za komunikację z biblioteką Weki.
+ * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.7
+ * @version 0.9.5
  */
 public class WekaAlgorithm {
     /**
@@ -19,7 +19,7 @@ public class WekaAlgorithm {
     private Instances data = null;
 
     /**
-     * Typ algorytmu jaki ma zostać użyty. Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst
+     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst
      */
     private int algorithmType = 0;
 
@@ -29,23 +29,12 @@ public class WekaAlgorithm {
     private String[] options;
 
     /**
-     * Obiekt zawierajacy dane zwracane przez Wekę.
+     * Obiekt zawierajace dane zwracajane przez Weke
      */
     private WekaAnswer wekaAnswer = new WekaAnswer();
 
     /**
-     * Obiekt przechowujący informacje dotyczące wykonania algorytmów.
-     */
-    private String info = "\n==== WekaAnswer informations ====\n";
-
-    /**
-     * Przechowuje informację o tym czy podczas wykonywania algorytmów
-     * doszło do błędu (false) czy też nie (true).
-     */
-    private boolean correct = true;
-
-    /**
-     * Tablica z nazwami udostępnianych algorytmów.
+     * Tablica z nazwami udostępnianych algorytmów
      */
     private static final String[] algorithms = {
         "SimpleKMeans",
@@ -68,40 +57,23 @@ public class WekaAlgorithm {
      */
     public void run() {
         switch(algorithmType) {
-            case 1: wekaAnswer.setAlgorithmName(algorithms[0]);
-                    wekaAnswer.setAlgorithmType(1);
-                    runSimpleKMeans();
+            case 1: runSimpleKMeans();
                     break;
-            case 2: wekaAnswer.setAlgorithmName(algorithms[1]);
-                    wekaAnswer.setAlgorithmType(2);
-                    runEM();
+            case 2: runEM();
                     break;
-            case 3: wekaAnswer.setAlgorithmName(algorithms[2]);
-                    wekaAnswer.setAlgorithmType(3);
-                    runHierarchicalClusterer();
+            case 3: runHierarchicalClusterer();
                     break;
-            case 4: wekaAnswer.setAlgorithmName(algorithms[3]);
-                    wekaAnswer.setAlgorithmType(4);
-                    runCobweb();
+            case 4: runCobweb();
                     break;
-            case 5: wekaAnswer.setAlgorithmName(algorithms[4]);
-                    wekaAnswer.setAlgorithmType(5);
-                    runFarthestFirst();
+            case 5: runFarthestFirst();
                     break;
             default: wekaAnswer.setAlgorithmName("Unknown");
-                     log("Nieznany typ algorytmu.");
         }
-
-        if(correct == false) {
-            wekaAnswer = new WekaAnswer();
-            wekaAnswer.setCorrect(correct);
-        }
-        wekaAnswer.setInfo(info);
     }
 
     /**
-     * Metoda ustawiająca typ algorytmu jaki ma zostać użyty.
-     * @param algorithmType Typ algorytmu jaki ma zostać użyty. Dostępne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst.
+     * Metoda ustawiająca typ algorytmu jaki ma zostać użyty
+     * @param algorithmType Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
     public void setAlgorithmType(int algorithmType) {
         this.algorithmType = algorithmType;
@@ -137,23 +109,13 @@ public class WekaAlgorithm {
      * Uruchamia algorytm SimpleKMeans.
      */
     private void runSimpleKMeans() {
+        wekaAnswer.setAlgorithmType(1);
+        wekaAnswer.setAlgorithmName(algorithms[0]);
         SimpleKMeans skm = new SimpleKMeans();
 
         try {
-            try {
-                skm.setOptions(options);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                skm.buildClusterer(data);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt z danymi.");
-                log(e.getMessage());
-                correct = false;
-            }
+            skm.setOptions(options);
+            skm.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setAssignments(skm.getAssignments());
 //            wekaAnswer.setCapabilities(skm.getCapabilities());
@@ -169,34 +131,21 @@ public class WekaAlgorithm {
             wekaAnswer.setSquaredError(skm.getSquaredError());
             wekaAnswer.setNumberOfClusters(skm.numberOfClusters());
         } catch(Exception e) {
-            log(e.getMessage());
-            correct = false;
+            e.printStackTrace();
         }
-        
-        if(correct) log("OK");
     }
 
     /**
      * Uruchamia algorytm EM.
      */
     private void runEM() {
+        wekaAnswer.setAlgorithmType(2);
+        wekaAnswer.setAlgorithmName(algorithms[1]);
         EM em = new EM();
 
         try {
-            try {
-                em.setOptions(options);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                em.buildClusterer(data);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt z danymi.");
-                log(e.getMessage());
-                correct = false;
-            }
+            em.setOptions(options);
+            em.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setClusterPriors(em.getClusterPriors());
             wekaAnswer.setClusterModelsNumericAtts(em.getClusterModelsNumericAtts());
@@ -204,37 +153,24 @@ public class WekaAlgorithm {
 //            wekaAnswer.setCapabilities(em.getCapabilities());
             wekaAnswer.setMaxIterations(em.getMaxIterations());
             wekaAnswer.setNumClusters(em.getNumClusters());
-            wekaAnswer.setOptions(options);
+            wekaAnswer.setOptions(em.getOptions());
             wekaAnswer.setRevision(em.getRevision());
         } catch(Exception e) {
-            log(e.getMessage());
-            correct = false;
+            e.printStackTrace();
         }
-
-        if(correct) log("OK");
     }
 
     /**
      * Uruchamia algorytm HierarchicalClusterer.
      */
     private void runHierarchicalClusterer() {
+        wekaAnswer.setAlgorithmType(3);
+        wekaAnswer.setAlgorithmName(algorithms[2]);
         HierarchicalClusterer hc = new HierarchicalClusterer();
 
         try {
-            try {
-                hc.setOptions(options);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                hc.buildClusterer(data);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt z danymi.");
-                log(e.getMessage());
-                correct = false;
-            }
+            hc.setOptions(options);
+            hc.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
 //            wekaAnswer.setCapabilities(hc.getCapabilities());
             wekaAnswer.setDistanceFunction(hc.getDistanceFunction());
@@ -246,34 +182,21 @@ public class WekaAlgorithm {
             wekaAnswer.setGraph(hc.graph());
             wekaAnswer.setGraphType(hc.graphType());
         } catch(Exception e) {
-            log(e.getMessage());
-            correct = false;
+            e.printStackTrace();
         }
-
-        if(correct) log("OK");
     }
 
     /**
      * Uruchamia algorytm Cobweb.
      */
     private void runCobweb() {
+        wekaAnswer.setAlgorithmType(4);
+        wekaAnswer.setAlgorithmName(algorithms[3]);
         Cobweb cw = new Cobweb();
 
         try {
-            try {
-                cw.setOptions(options);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                cw.buildClusterer(data);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt z danymi.");
-                log(e.getMessage());
-                correct = false;
-            }
+            cw.setOptions(options);
+            cw.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setAcuity(cw.getAcuity());
 //            wekaAnswer.setCapabilities(cw.getCapabilities());
@@ -283,53 +206,28 @@ public class WekaAlgorithm {
             wekaAnswer.setGraph(cw.graph());
             wekaAnswer.setGraphType(cw.graphType());
         } catch(Exception e) {
-            log(e.getMessage());
-            correct = false;
+            e.printStackTrace();
         }
-
-        if(correct) log("OK");
     }
-
+    
     /**
      * Uruchamia algorytm FarthestFirst.
      */
     private void runFarthestFirst(){
+         wekaAnswer.setAlgorithmName(algorithms[4]);
         FarthestFirst ff = new FarthestFirst();
 
         try {
-            try {
-                ff.setOptions(options);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                ff.buildClusterer(data);
-            } catch(Exception e) {
-                log("Niepoprawny obiekt z danymi.");
-                log(e.getMessage());
-                correct = false;
-            }
+            ff.setOptions(options);
+            ff.buildClusterer(data);
             //rozpoczęcie budowania obiektu z danymi
             wekaAnswer.setNumClusters(ff.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(ff.getRevision());
             wekaAnswer.setNumberOfClusters(ff.numberOfClusters());
         } catch(Exception e) {
-            log(e.getMessage());
-            correct = false;
+            e.printStackTrace();
         }
-
-        if(correct) log("OK");
     }
-
-    /**
-     * Metoda zapisująca w logu informacje o błędach lub poprawności wykonania algorytmu.
-     * Log jest następnie dostępny w obiekcie WekaAnswer przy użyciu metody getInfo().
-     * @param msg Wiadomość, która ma zostać zapisana w logu.
-     */
-    private void log(String msg) {
-        info += "\n[INFO] " + wekaAnswer.getAlgorithmName() + ": " + msg;
-    }
+    
 }
