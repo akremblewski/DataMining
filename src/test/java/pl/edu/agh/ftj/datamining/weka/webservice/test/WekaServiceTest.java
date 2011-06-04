@@ -17,7 +17,7 @@ import pl.edu.agh.ftj.datamining.weka.webservice.WekaService;
 
 /**
  * JUnit Test do klasy WekaService
- * @author Szymon Skupień
+ * @author Szymon SkupieĹ„
  * @version 1.0
  */
 public class WekaServiceTest {
@@ -25,14 +25,14 @@ public class WekaServiceTest {
     /**
      * Adres do webservisu Weki 
      */
-    private final String WekaRESTServiceURI = "http://localhost:8080/WekaRESTService/rest";
+    private final String WekaRESTServiceURI = "http://localhost:8080/WekaService/rest";
     /**
      * Klasa klienta WebServisu
      */
     private WekaRESTServiceClient client;
 
     /**
-     * Metoda wykonuje sie przed wykonaniem każdego testu
+     * Metoda wykonuje sie przed wykonaniem kaĹĽdego testu
      * tworzy nowy obiekt klienta servisu
      */
     @Before
@@ -46,7 +46,7 @@ public class WekaServiceTest {
     @Test
     public void testGetAlgorithms() {
 
-        String expResult = "<getAlgorithmsResponse xmlns=\"http://webservice/weka/datamaining/ftj/agh/edu/pl/xsd\"><return>SimpleKMeans</return><return>EM</return><return>HierarchicalClusterer</return><return>Cobweb</return></getAlgorithmsResponse>";
+        String expResult = "<getAlgorithmsResponse xmlns=\"http://webservice/weka/datamaining/ftj/agh/edu/pl/xsd\"><return>SimpleKMeans</return><return>EM</return><return>HierarchicalClusterer</return><return>Cobweb</return><return>FarthestFirst</return></getAlgorithmsResponse>";
 
         String response = client.getAlgorithms();
 
@@ -60,8 +60,8 @@ public class WekaServiceTest {
     @Test
     public void testRunAlgorithm() throws IOException, ClassNotFoundException {
 
-        WekaAnswer response = client.runAlgorithm(1, "location", "ïd", "table", "opt");
-        Response expResp = new WekaService().runAlgorithm(1, "location", "id", "table", "opt");
+        WekaAnswer response = client.runAlgorithm(1, "id", "table", "O");
+        Response expResp = new WekaService().runAlgorithm(1, "id", "table", "O");
         byte[] expRespByte = (byte[]) expResp.getEntity();
         WekaAnswer expResponse = new WekaAnswer();
         try {
@@ -86,7 +86,7 @@ public class WekaServiceTest {
     }
 
     /**
-     * Wykonuje się po każdym tescie
+     * Wykonuje się  po kazdym tescie
      * zamyka klienta i kasuje referencje objektu
      */
     @After

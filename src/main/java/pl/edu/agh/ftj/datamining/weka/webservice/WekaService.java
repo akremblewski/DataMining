@@ -2,22 +2,23 @@ package pl.edu.agh.ftj.datamining.weka.webservice;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
+import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceRef;
+import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService;
+import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessServicePortType;
 import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAlgorithm;
 import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAnswer;
 import weka.core.Instances;
@@ -34,10 +35,14 @@ import weka.core.converters.ConverterUtils.DataSource;
 @Path("/")
 public class WekaService implements IWekaService {
 
+    //Adres do WSDL webservisu ustawiony odgornie
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/axis2/services/DataAccessService.wsdl")
+    private DataAccessService service;
+
     private static final Logger log = Logger.getLogger("WekaRESTServiceLog");
 
     /**
-     * Funkcja odpowiadajaca na rzadanie GET http://localhost:8080/WekaRESTService/rest/
+     * Funkcja odpowiadajaca na zadanie GET http://localhost:8080/WekaRESTService/rest/
      * @return Strona html przekierowujaca na adres http://prgzsp.ftj.agh.edu.pl/trac/P3-DataMining
      */
     @GET
@@ -48,8 +53,7 @@ public class WekaService implements IWekaService {
     }
 
     /**
-     * @return zwraca tablicę z nazwami dostępnych algorytmów (inaczej sie nie da,
-     * trzeba zrobic klase opakowujaca String'a)
+     * @return zwraca tablice z nazwami dostepnych algorytmow w postaci XML'a
      */
     @GET
     @Produces("application/xml")
@@ -68,24 +72,71 @@ public class WekaService implements IWekaService {
     /**
      * Funkcja uruchamia dzialanie algorytmu
      * @param algorithmType wybiera typ algorytmu
-     * @param location      adres URL do webservisu dbapi
      * @param id            id do danych (do webservisu dbapi)
      * @param table         table do danych (do webservisu dbapi)
      * @param options       opcje algorytmu
-     * @return Zwraca przetworzone dane z Weki w postaci zserializowanego obiektu WekaAnswer zserializowanej (ciąg bajtów)
+     * @return Zwraca przetworzone dane z Weki w postaci zserializowanego obiektu WekaAnswer zserializowanej (ciÄ…g bajtĂłw)
      */
     @GET
     @Produces("application/octet-stream")
     @Path("/runAlgorithm")
-    public Response runAlgorithm(@QueryParam("algorithmType") Integer algorithmType, @QueryParam("location") String location, @QueryParam("id") String id, @QueryParam("table") String table, @QueryParam("options") String options) {
+    public Response runAlgorithm(@QueryParam("algorithmType") Integer algorithmType,/* @QueryParam("location") String location, */@QueryParam("id") String id, @QueryParam("table") String table, @QueryParam("options") String options) {
 
-    //TODO: odczyt obiektu Instances z WebServisu DBApi
+        // zeby nie bylo null, wstawiam dane testowe
+        String result = pogoda;
+        try {
+            
+            //DataAccessService service = new DataAccessService(new URL(location), new QName("DataAccess"));
+            
+            DataAccessServicePortType port = service.getDataAccessServiceHttpSoap11Endpoint();
 
+            //wywoluje zdalna metode WebServisu DbAPI
+            result = port.getData(id, table);
+            //System.out.println("Result = "+result);
+        } catch (Exception ex) {
+            // cos poszlo nietak
+        }
+
+        // String to Instances
+        Instances data = getInstancesFromString(result);
+
+        // String to String[]
+        String[] opt = parseStringOptions(options);
+
+
+        //tworze algorytm
+        WekaAlgorithm alg = new WekaAlgorithm();
+
+        //ustawiam niezbedne opcje
+        alg.setData(data);
+        alg.setAlgorithmType(algorithmType);
+        alg.setOptions(opt);
+        alg.run();
+
+        //pobieram odpowiedz
+        final WekaAnswer wekaAnswer = alg.getData();
+
+        //serializuje obiekt
+        byte[] bytes = wekaAnswer2Byte(wekaAnswer);
+        
+        //wysylka
+        return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
+
+    }
+
+
+    /**
+     * Funkcja konwertujaca string do klasy instances weki
+     * @param data String
+     * @return Instances weki
+     */
+    private Instances getInstancesFromString(String dane){
+        
         DataSource source = null;
         Instances data = null;
         InputStream is = null;
         try {
-            is = new ByteArrayInputStream(pogoda.getBytes("UTF-8"));
+            is = new ByteArrayInputStream(dane.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -102,41 +153,48 @@ public class WekaService implements IWekaService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return data;
+    }
 
 
-        //TODO odczyt opcji ze stringu
-        String[] opt = new String[1];
-        opt[0] = "-O";
-        WekaAlgorithm alg = new WekaAlgorithm();
+    /**
+     * Funkcja konwertujaca ciag opcji do tablicy opcji
+     * @param options String
+     * @return
+     */
+    private String[] parseStringOptions(String options){
+        String[] retStr = options.split(";");
+        for(int i=0; i<retStr.length; i++){
+            retStr[i] = "-"+retStr[i];
+        }
+        return retStr;
+    }
 
-        alg.setData(data);
-        alg.setAlgorithmType(algorithmType);
-        alg.setOptions(opt);
-        alg.run();
-        final WekaAnswer wekaAnswer = alg.getData();
 
-
+    /**
+     * FUnkcja ktora serializuje obiekt klasy WekaAnswer do ciagu bajtow
+     * @param ans WekaAnswer
+     * @return byte[]
+     */
+    private byte[] wekaAnswer2Byte(WekaAnswer ans){
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] bytes = null;
         try {
             ObjectOutput out = new ObjectOutputStream(bos);
-            out.writeObject(wekaAnswer);
+            out.writeObject(ans);
             bytes = bos.toByteArray();
         } catch (Exception e) {
 
             log.log(Level.ALL, "runAlgorithm error:");
             log.log(Level.ALL, e.getMessage());
         }
-
-        return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
-
+        return bytes;
     }
 
-
-    /**
-     * Dane testowe
-     */
-    private String pogoda = "@relation Test\n"
+/**
+ * Dane Testowe
+ */
+      public String pogoda = "@relation Test\n"
             + "@attribute pogoda {slonecznie, pochmurno, deszczowo}\n"
             + "@attribute temperatura real\n"
             + "@attribute wilgotnosc real\n"
@@ -157,4 +215,5 @@ public class WekaService implements IWekaService {
             + "pochmurno,72,90,TRUE,tak\n"
             + "pochmurno,81,75,FALSE,tak\n"
             + "deszczowo,71,91,TRUE,nie";
+
 }

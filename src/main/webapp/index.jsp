@@ -49,6 +49,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Przekierowanie na traca projektu -->
         <META HTTP-EQUIV="Refresh" CONTENT="1; URL=http://prgzsp.ftj.agh.edu.pl/trac/P3-DataMining">
         <title>Weka REST WebService</title>
     </head>

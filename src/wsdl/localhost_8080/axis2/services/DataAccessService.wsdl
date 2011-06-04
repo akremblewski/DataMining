@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://webservice.dbapi.datamining.ftj.agh.edu.pl" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://core.dbapi.datamining.ftj.agh.edu.pl/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://webservice.dbapi.datamining.ftj.agh.edu.pl">
+    <wsdl:documentation>DataAccess</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax22="http://core.dbapi.datamining.ftj.agh.edu.pl/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webservice.dbapi.datamining.ftj.agh.edu.pl">
+            <xs:import namespace="http://core.dbapi.datamining.ftj.agh.edu.pl/xsd"/>
+            <xs:element name="getDataSourcesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax22:BasicConfigurationDataSourceModel"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="table" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://core.dbapi.datamining.ftj.agh.edu.pl/xsd">
+            <xs:complexType name="BasicConfigurationDataSourceModel">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="database" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="displayedName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="location" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tables" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getDataSourcesRequest"/>
+    <wsdl:message name="getDataSourcesResponse">
+        <wsdl:part name="parameters" element="ns:getDataSourcesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getDataRequest">
+        <wsdl:part name="parameters" element="ns:getData"/>
+    </wsdl:message>
+    <wsdl:message name="getDataResponse">
+        <wsdl:part name="parameters" element="ns:getDataResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="DataAccessServicePortType">
+        <wsdl:operation name="getDataSources">
+            <wsdl:input message="ns:getDataSourcesRequest" wsaw:Action="urn:getDataSources"/>
+            <wsdl:output message="ns:getDataSourcesResponse" wsaw:Action="urn:getDataSourcesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getData">
+            <wsdl:input message="ns:getDataRequest" wsaw:Action="urn:getData"/>
+            <wsdl:output message="ns:getDataResponse" wsaw:Action="urn:getDataResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="DataAccessServiceSoap11Binding" type="ns:DataAccessServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getData">
+            <soap:operation soapAction="urn:getData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSources">
+            <soap:operation soapAction="urn:getDataSources" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="DataAccessServiceSoap12Binding" type="ns:DataAccessServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getData">
+            <soap12:operation soapAction="urn:getData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSources">
+            <soap12:operation soapAction="urn:getDataSources" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="DataAccessServiceHttpBinding" type="ns:DataAccessServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getData">
+            <http:operation location="DataAccessService/getData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getData"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getData"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSources">
+            <http:operation location="DataAccessService/getDataSources"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getDataSources"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getDataSources"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DataAccessService">
+        <wsdl:port name="DataAccessServiceHttpSoap11Endpoint" binding="ns:DataAccessServiceSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="DataAccessServiceHttpSoap12Endpoint" binding="ns:DataAccessServiceSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="DataAccessServiceHttpEndpoint" binding="ns:DataAccessServiceHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

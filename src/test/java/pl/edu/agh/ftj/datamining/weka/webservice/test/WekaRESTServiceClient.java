@@ -58,20 +58,19 @@ public class WekaRESTServiceClient {
     /**
      * Uruchamia algorytm, w parametrach podaje się:
      * @param typ algorytmu
-     * @param lokacja WS DBApi
      * @param id (DBApi)
      * @param table (DBApi)
      * @param options 
      * @return odpowiedz WekaAnswer
      */
-    public WekaAnswer runAlgorithm(int algorithmType, String location, String id, String table, String options) {
+    public WekaAnswer runAlgorithm(int algorithmType,/* String location,*/ String id, String table, String options) {
         
         WekaAnswer wekaAns = new WekaAnswer();
         byte[] odpBytes;
 
         MultivaluedMap queryParams = new MultivaluedMapImpl();
         queryParams.add("algorithmType", String.valueOf(algorithmType));
-        queryParams.add("location", location);
+        //queryParams.add("location", location);
         queryParams.add("id", id);
         queryParams.add("table", table);
         queryParams.add("options", options);
@@ -83,7 +82,7 @@ public class WekaRESTServiceClient {
            // ile = odp.read(odpBytes);
             odpBytes = readFromStream(odp);
             ile = odpBytes.length;
-           // System.out.println(new String(odpBytes));
+            System.out.println(new String(odpBytes));
             ByteArrayInputStream bis = new ByteArrayInputStream(odpBytes);
             ObjectInput in = new ObjectInputStream(bis);
             wekaAns = (WekaAnswer) in.readObject();

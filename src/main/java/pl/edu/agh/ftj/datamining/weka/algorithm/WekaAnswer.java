@@ -92,12 +92,12 @@ public class WekaAnswer {
     private int numClusters = -1;
 
     /**
-     * Opcje wg. których działał algorytm.
+     * Opcje wg. kt�rych dzia�a algorytm.
      */
     private String[] options = null;
 
     /**
-     * Łańcuch z rewizją.
+     * �ancuch z rewizja
      */
     private String revision = null;
 
@@ -472,8 +472,8 @@ public class WekaAnswer {
     }
 
     /**
-     * Zwraca łańcuch z informacją o typie algorytmu i jego nazwie.
-     * @return Łańcuch z informacją o algorytmie.
+     * Zwraca �a�cuch z informacj� o typie algorytmu i jego nazwie.
+     * @return lancuch z informacja o algorytmie.
      */
     @Override
     public String toString() {
@@ -582,14 +582,16 @@ public class WekaAnswer {
     }
 
     /**
-     * @return the info
+     * Informacja o błędach lub o poprawności wykonanego algorytmu. Jeżeli jest ok w info znajdzie się string 'ok'
+     * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
      */
     public String getInfo() {
         return info;
     }
 
     /**
-     * @param info the info to set
+     * Informacja o błędach lub o poprawności wykonanego algorytmu. Jeżeli jest ok w info znajdzie się string 'ok'
+     * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
      */
     public void setInfo(String info) {
         this.info = info;
