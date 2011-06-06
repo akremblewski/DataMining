@@ -84,7 +84,7 @@ public class WekaService implements IWekaService {
          
         //brakuje jednej z opcji
         if(algorithmType == null || id == null || table == null || options == null){
-                //pobieram odpowiedz
+                
                 final WekaAnswer wekaAnswer = new WekaAnswer();
 
                 //TODO:ustawic dokladniejsze info
