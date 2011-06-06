@@ -2,6 +2,7 @@ package pl.edu.agh.ftj.datamining.weka.algorithm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import weka.core.DistanceFunction;
 import weka.core.EuclideanDistance;
@@ -12,9 +13,9 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.3
+ * @version 0.9.5
  */
-public class WekaAnswer {
+public class WekaAnswer implements Serializable {
     /**
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
@@ -25,6 +26,12 @@ public class WekaAnswer {
      * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
      */
     private String info;
+
+    /**
+     * Przechowuje informację o tym, czy obiekt WekaAnswer został poprawnie utworzony (wartość true).
+     * Jeśli wystąpił błąd (wartość false) wtedy wszystkie pola klasy będą puste.
+     */
+    private boolean correct = true;
 
     /**
      * Nazwa użytego algorytmu.
@@ -92,12 +99,12 @@ public class WekaAnswer {
     private int numClusters = -1;
 
     /**
-     * Opcje wg. kt�rych dzia�a algorytm.
+     * Opcje wg. kt�rych dzia�a algorytm.
      */
     private String[] options = null;
 
     /**
-     * �ancuch z rewizja
+     * �ancuch z rewizja
      */
     private String revision = null;
 
@@ -472,7 +479,7 @@ public class WekaAnswer {
     }
 
     /**
-     * Zwraca �a�cuch z informacj� o typie algorytmu i jego nazwie.
+     * Zwraca �a�cuch z informacj� o typie algorytmu i jego nazwie.
      * @return lancuch z informacja o algorytmie.
      */
     @Override
@@ -586,6 +593,9 @@ public class WekaAnswer {
      * jeżeli będą błędy, tutaj znajdzie się wiadomość o napotkanym błędzie. Reszta pól będzie wtedy pusta.
      */
     public String getInfo() {
+        if(info == null) {
+            info = "\n==== WekaAnswer informations ====\n";
+        }
         return info;
     }
 
@@ -597,4 +607,19 @@ public class WekaAnswer {
         this.info = info;
     }
 
+    /**
+     * Zwraca informację o poprawności obiektu WekaAnswer.
+     * @return TRUE - jeśli obiekt został utworzony poprawnie. FALSE - w przeciwnym przypadku.
+     */
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    /**
+     * Ustawia parametr informujący o poprawności obiektu.
+     * @param value TRUE - jeśli obiekt poprawny, FALSE - w przeciwnym przypadku.
+     */
+    public void setCorrect(boolean value) {
+        correct = value;
+    }
 }

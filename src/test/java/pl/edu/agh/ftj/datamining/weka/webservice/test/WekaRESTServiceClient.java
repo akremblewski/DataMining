@@ -57,7 +57,7 @@ public class WekaRESTServiceClient {
 
     /**
      * Uruchamia algorytm, w parametrach podaje się:
-     * @param typ algorytmu
+     * @param algorithmType typ algorytmu
      * @param id (DBApi)
      * @param table (DBApi)
      * @param options 
