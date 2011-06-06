@@ -2,6 +2,7 @@ package pl.edu.agh.ftj.datamining.weka.algorithm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import weka.core.DistanceFunction;
 import weka.core.EuclideanDistance;
@@ -12,9 +13,9 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowujÄ…cego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten bÄ™dzie zwracany do silnika.
  * @author BartÅ‚omiej Wojas, Adrian Kremblewski, Szymon SkupieÅ„
- * @version 0.9.3
+ * @version 0.9.4
  */
-public class WekaAnswer {
+public class WekaAnswer implements Serializable {
     /**
      * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
      */
@@ -92,12 +93,12 @@ public class WekaAnswer {
     private int numClusters = -1;
 
     /**
-     * Opcje wg. których dzia³a algorytm.
+     * Opcje wg. ktï¿½rych dziaï¿½a algorytm.
      */
     private String[] options = null;
 
     /**
-     * ³ancuch z rewizja
+     * ï¿½ancuch z rewizja
      */
     private String revision = null;
 
@@ -472,7 +473,7 @@ public class WekaAnswer {
     }
 
     /**
-     * Zwraca ³añcuch z informacj¹ o typie algorytmu i jego nazwie.
+     * Zwraca ï¿½aï¿½cuch z informacjï¿½ o typie algorytmu i jego nazwie.
      * @return lancuch z informacja o algorytmie.
      */
     @Override

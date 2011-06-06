@@ -81,7 +81,22 @@ public class WekaService implements IWekaService {
     @Produces("application/octet-stream")
     @Path("/runAlgorithm")
     public Response runAlgorithm(@QueryParam("algorithmType") Integer algorithmType,/* @QueryParam("location") String location, */@QueryParam("id") String id, @QueryParam("table") String table, @QueryParam("options") String options) {
+         
+        //brakuje jednej z opcji
+        if(algorithmType == null || id == null || table == null || options == null){
+                //pobieram odpowiedz
+                final WekaAnswer wekaAnswer = new WekaAnswer();
 
+                //TODO:ustawic dokladniejsze info
+                wekaAnswer.setInfo("Brakuje jednej z opcji");
+             
+                //serializuje obiekt
+                byte[] bytes = wekaAnswer2Byte(wekaAnswer);
+
+               
+                //wysylka
+                return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
+        }
         // zeby nie bylo null, wstawiam dane testowe
         String result = pogoda;
         try {
@@ -95,6 +110,7 @@ public class WekaService implements IWekaService {
             //System.out.println("Result = "+result);
         } catch (Exception ex) {
             // cos poszlo nietak
+            log.log(Level.ALL, "DataAccess ERROR!!!!!!!!!!");
         }
 
         // String to Instances
@@ -188,6 +204,7 @@ public class WekaService implements IWekaService {
             log.log(Level.ALL, "runAlgorithm error:");
             log.log(Level.ALL, e.getMessage());
         }
+       // System.out.println(bytes.toString());
         return bytes;
     }
 
