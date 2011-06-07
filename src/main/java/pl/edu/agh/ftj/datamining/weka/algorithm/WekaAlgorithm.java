@@ -1,16 +1,18 @@
 package pl.edu.agh.ftj.datamining.weka.algorithm;
 
+import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Cobweb;
 import weka.clusterers.EM;
 import weka.clusterers.HierarchicalClusterer;
 import weka.clusterers.SimpleKMeans;
 import weka.clusterers.FarthestFirst;
+import weka.core.Instance;
 import weka.core.Instances;
 
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.7
+ * @version 0.9.8
  */
 public class WekaAlgorithm {
     /**
@@ -138,6 +140,7 @@ public class WekaAlgorithm {
      */
     private void runSimpleKMeans() {
         SimpleKMeans skm = new SimpleKMeans();
+        ClusterEvaluation eval = new ClusterEvaluation();
 
         try {
             try {
@@ -149,6 +152,8 @@ public class WekaAlgorithm {
             }
             try {
                 skm.buildClusterer(data);
+                eval.setClusterer(skm);
+                eval.evaluateClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt z danymi.");
                 log(e.getMessage());
@@ -168,6 +173,8 @@ public class WekaAlgorithm {
             wekaAnswer.setRevision(skm.getRevision());
             wekaAnswer.setSquaredError(skm.getSquaredError());
             wekaAnswer.setNumberOfClusters(skm.numberOfClusters());
+            wekaAnswer.setClusterer(skm);
+            wekaAnswer.setEval(eval);
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;
@@ -183,6 +190,7 @@ public class WekaAlgorithm {
      */
     private void runEM() {
         EM em = new EM();
+        ClusterEvaluation eval = new ClusterEvaluation();
 
         try {
             try {
@@ -194,6 +202,8 @@ public class WekaAlgorithm {
             }
             try {
                 em.buildClusterer(data);
+                eval.setClusterer(em);
+                eval.evaluateClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt z danymi.");
                 log(e.getMessage());
@@ -208,6 +218,8 @@ public class WekaAlgorithm {
             wekaAnswer.setNumClusters(em.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(em.getRevision());
+            wekaAnswer.setClusterer(em);
+            wekaAnswer.setEval(eval);
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;
@@ -223,6 +235,7 @@ public class WekaAlgorithm {
      */
     private void runHierarchicalClusterer() {
         HierarchicalClusterer hc = new HierarchicalClusterer();
+        ClusterEvaluation eval = new ClusterEvaluation();
 
         try {
             try {
@@ -234,6 +247,8 @@ public class WekaAlgorithm {
             }
             try {
                 hc.buildClusterer(data);
+                eval.setClusterer(hc);
+                eval.evaluateClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt z danymi.");
                 log(e.getMessage());
@@ -249,6 +264,8 @@ public class WekaAlgorithm {
             wekaAnswer.setRevision(hc.getRevision());
             wekaAnswer.setGraph(hc.graph());
             wekaAnswer.setGraphType(hc.graphType());
+            wekaAnswer.setClusterer(hc);
+            wekaAnswer.setEval(eval);
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;
@@ -264,10 +281,16 @@ public class WekaAlgorithm {
      */
     private void runCobweb() {
         Cobweb cw = new Cobweb();
+        ClusterEvaluation eval = new ClusterEvaluation();
 
         try {
             try {
                 cw.setOptions(options);
+                for (Instance current : data)
+                    cw.updateClusterer(current);
+                cw.updateFinished();
+                eval.setClusterer(cw);
+                eval.evaluateClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt Options.");
                 log(e.getMessage());
@@ -288,6 +311,8 @@ public class WekaAlgorithm {
             wekaAnswer.setRevision(cw.getRevision());
             wekaAnswer.setGraph(cw.graph());
             wekaAnswer.setGraphType(cw.graphType());
+            wekaAnswer.setClusterer(cw);
+            wekaAnswer.setEval(eval);
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;
@@ -303,6 +328,7 @@ public class WekaAlgorithm {
      */
     private void runFarthestFirst() {
         FarthestFirst ff = new FarthestFirst();
+        ClusterEvaluation eval = new ClusterEvaluation();
 
         try {
             try {
@@ -314,6 +340,8 @@ public class WekaAlgorithm {
             }
             try {
                 ff.buildClusterer(data);
+                eval.setClusterer(ff);
+                eval.evaluateClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt z danymi.");
                 log(e.getMessage());
@@ -324,6 +352,8 @@ public class WekaAlgorithm {
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(ff.getRevision());
             wekaAnswer.setNumberOfClusters(ff.numberOfClusters());
+            wekaAnswer.setClusterer(ff);
+            wekaAnswer.setEval(eval);
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;

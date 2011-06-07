@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
+import weka.clusterers.ClusterEvaluation;
+import weka.clusterers.Clusterer;
 import weka.core.DistanceFunction;
 import weka.core.EuclideanDistance;
 import weka.core.Instances;
@@ -13,7 +15,7 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.5
+ * @version 0.9.6
 
  */
 public class WekaAnswer implements Serializable {
@@ -163,6 +165,16 @@ public class WekaAnswer implements Serializable {
      *
      */
     private boolean printNewick = false;
+
+    /**
+     * Obiekt klasteryzatora.
+     */
+    private Clusterer clusterer = null;
+
+    /**
+     * Obiekt ewaluacji modelu.
+     */
+    private ClusterEvaluation eval = null;
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -622,5 +634,37 @@ public class WekaAnswer implements Serializable {
      */
     public void setCorrect(boolean value) {
         correct = value;
+    }
+
+    /**
+     * Zwraca obiekt klasteryzatora.
+     * @return Obiekt klasteryzatora.
+     */
+    public Clusterer getClusterer() {
+        return clusterer;
+    }
+
+    /**
+     * Ustawia obiekt klasteryzatora.
+     * @param clusterer Obiekt klasteryzatora
+     */
+    public void setClusterer(Clusterer clusterer) {
+        this.clusterer = clusterer;
+    }
+
+    /**
+     * Zwraca obiekt ewaluacji modelu.
+     * @return Obiekt ewaluacji modelu.
+     */
+    public ClusterEvaluation getEval() {
+        return eval;
+    }
+
+    /**
+     * Ustawia obiekt ewaluacji modelu.
+     * @param eval Obiekt ewaluacji modelu.
+     */
+    public void setEval(ClusterEvaluation eval) {
+        this.eval = eval;
     }
 }
