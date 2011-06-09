@@ -12,7 +12,7 @@ import weka.core.Instances;
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.8
+ * @version 0.9.9
  */
 public class WekaAlgorithm {
     /**
@@ -115,6 +115,7 @@ public class WekaAlgorithm {
      */
     public void setData(Instances data) {
         this.data = data;
+        wekaAnswer.setData(data);
     }
 
     /**

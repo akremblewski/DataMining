@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Clusterer;
+import weka.core.Attribute;
 import weka.core.DistanceFunction;
 import weka.core.EuclideanDistance;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader.ArffReader;
 
@@ -15,7 +20,7 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.6
+ * @version 0.9.7
 
  */
 public class WekaAnswer implements Serializable {
@@ -175,6 +180,11 @@ public class WekaAnswer implements Serializable {
      * Obiekt ewaluacji modelu.
      */
     private ClusterEvaluation eval = null;
+
+    /**
+     * Obiekt z instancjami do analizy.
+     */
+    private Instances data = null;
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -666,5 +676,87 @@ public class WekaAnswer implements Serializable {
      */
     public void setEval(ClusterEvaluation eval) {
         this.eval = eval;
+    }
+
+    /**
+     * Zwraca tylko te instancje, które należą do klastra o podanym numerze.
+     * @param numClust Numer klastra
+     * @return Instancje należące do podanego klastra.
+     */
+    public Instances getClusterInstances(int numClust) {
+        Instances inst = new Instances(data);
+        inst.clear();
+
+        try {
+            for (int i = 0; i < data.numInstances(); ++i) {
+                if (clusterer.clusterInstance(data.instance(i)) == numClust) {
+                    inst.add(data.instance(i));
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return inst;
+    }
+
+    /**
+     * Zwraca obiekt z instancjami, które miały zostać poddane analizie.
+     * @return Obiekt z instancjami
+     */
+    public Instances getData() {
+        return data;
+    }
+
+    /**
+     * Ustawia obiekt z instancjami, które miał zostać poddane analizie.
+     * @param data Obiekt z instancjami.
+     */
+    public void setData(Instances data) {
+        this.data = data;
+    }
+
+    /**
+     * Zwraca listę dostępnych atrybutów.
+     * @return Lista dostępnych atrybutów.
+     */
+    public List<String> getAttributeNames() {
+        Enumeration e = data.enumerateAttributes();
+        List<String> attributeNames = new ArrayList<String>();
+
+        while (e.hasMoreElements()) {
+            attributeNames.add(((Attribute)e.nextElement()).name());
+        }
+
+        return attributeNames;
+    }
+
+    /**
+     * Metoda zwracająca listę wartości dla danej instancji.
+     * @param inst Analizowana instancja
+     * @param attrX Nazwa atrybutu dla osi X.
+     * @param attrY Nazwa atrybutu dla osi Y
+     * @return Lista dwuelementowa z wartościami kolejno dla osi X i Y.
+     */
+    public List<Object> getValueForInstance(Instance inst, String attrX, String attrY) {
+        List<Object> value = new ArrayList<Object>();
+        Attribute atX = inst.attribute(getAttributeNames().indexOf(attrX));
+        Attribute atY = inst.attribute(getAttributeNames().indexOf(attrY));
+
+        if (atX.isNominal()) {
+            double val = inst.value(atX);
+            value.add(atX.value((int)val));
+        } else {
+            value.add(inst.value(atX));
+        }
+
+        if (atY.isNominal()) {
+            double val = inst.value(atY);
+            value.add(atY.value((int)val));
+        } else {
+            value.add(inst.value(atY));
+        }
+
+        return value;
     }
 }
