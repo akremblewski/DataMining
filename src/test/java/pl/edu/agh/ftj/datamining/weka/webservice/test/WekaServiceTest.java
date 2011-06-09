@@ -25,7 +25,7 @@ public class WekaServiceTest {
     /**
      * Adres do webservisu Weki 
      */
-    private final String WekaRESTServiceURI = "http://localhost:8080/WekaRESTService/rest";
+    private final String WekaRESTServiceURI = "http://prgzsp.ftj.agh.edu.pl:8080/WekaRESTService/rest";
     /**
      * Klasa klienta WebServisu
      */

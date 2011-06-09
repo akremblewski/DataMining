@@ -36,7 +36,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 public class WekaService implements IWekaService {
 
     //Adres do WSDL webservisu ustawiony odgornie
-    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/axis2/services/DataAccessService.wsdl")
+    @WebServiceRef(wsdlLocation = "http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService?wsdl")
     private DataAccessService service;
 
     private static final Logger log = Logger.getLogger("WekaRESTServiceLog");

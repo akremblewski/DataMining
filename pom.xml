@@ -90,21 +90,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <version>1.10</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                        <configuration>
-                            <wsdlFiles>
-                                <wsdlFile>localhost_8080/axis2/services/DataAccessService.wsdl</wsdlFile>
-                            </wsdlFiles>
-                            <staleFile>${project.build.directory}/jaxws/stale/DataAccessService.stale</staleFile>
-                        </configuration>
-                        <id>wsimport-generate-DataAccessService</id>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
+                <executions></executions>
                 <dependencies>
                     <dependency>
                         <groupId>javax.xml</groupId>
