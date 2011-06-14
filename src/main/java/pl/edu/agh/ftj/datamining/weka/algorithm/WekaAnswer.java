@@ -1,4 +1,4 @@
-package pl.edu.agh.ftj.datamining.weka.algorithm;
+package wekatest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,12 +20,12 @@ import weka.core.converters.ArffLoader.ArffReader;
  * Klasa obiektu przechowującego dane wyprodukowane przez algorytmy Weki.
  * Obiekt ten będzie zwracany do silnika.
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.7
+ * @version 0.9.8
 
  */
 public class WekaAnswer implements Serializable {
     /**
-     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb.
+     * Typ algorytmu jaki ma zostac uzyty. Dostepne opcje: 1 - SimpleKMeans, 2 - EM, 3 - HierarchicalClusterer, 4 - Cobweb, 5 - FarthestFirst.
      */
     private int algorithmType = -1;
 
@@ -50,11 +50,6 @@ public class WekaAnswer implements Serializable {
      * Tablica indeksów pozwalających powiązać środki klastrów z poszczególnymi instancjami.
      */
     private int[] assignments = null;
-
-//    /**
-//     * Standardowe możliwości jakie posiada wybrany typ algorytmu.
-//     */
-//    private Capabilities capabilities = null;
 
     /**
      * Zbiór instancji będących środkami wszystkich wyznaczonych klastrów.
@@ -161,11 +156,6 @@ public class WekaAnswer implements Serializable {
      */
     private int graphType = -1;
 
-//    /**
-//     *
-//     */
-//    private SelectedTag linkType = null;
-
     /**
      *
      */
@@ -203,22 +193,6 @@ public class WekaAnswer implements Serializable {
     public void setAssignments(int[] assignments) {
         this.assignments = assignments;
     }
-
-//    /**
-//     * Zwraca obiekt z możliwościami jakie posiada użyty typ algorytmu.
-//     * @return Obiekt możliwości.
-//     */
-//    public Capabilities getCapabilities() {
-//        return capabilities;
-//    }
-
-//    /**
-//     * Ustawia możliwości jakie posiadał użyty typ algorytmu.
-//     * @param capabilities Obiekt z możliwościami użytego algorytmu.
-//     */
-//    public void setCapabilities(Capabilities capabilities) {
-//        this.capabilities = capabilities;
-//    }
 
     /**
     * Oblicza i zwraca srodki wszystkich znalezionych klastrow w postaci zbioru instacji.
@@ -360,8 +334,8 @@ public class WekaAnswer implements Serializable {
     * Zwraca liczbę klastrów do wygenerowania.
     * @return Liczba klastrow do wygenerowania.
     */
-    public int getNumClusters() {
-        return numClusters;
+    public int getNumClusters() throws Exception {
+        return clusterer.numberOfClusters();
     }
 
     /**
@@ -425,8 +399,8 @@ public class WekaAnswer implements Serializable {
     * Zwraca liczbe wyznaczonych klastrow.
     * @return Liczba klastrow.
     */
-    public int getNumberOfClusters() {
-        return numberOfClusters;
+    public int getNumberOfClusters() throws Exception {
+        return clusterer.numberOfClusters();
     }
 
     /**
@@ -575,20 +549,6 @@ public class WekaAnswer implements Serializable {
     public void setGraphType(int graphType) {
         this.graphType = graphType;
     }
-
-//    /**
-//     * @return the linkType
-//     */
-//    public SelectedTag getLinkType() {
-//        return linkType;
-//    }
-//
-//    /**
-//     * @param linkType the linkType to set
-//     */
-//    public void setLinkType(SelectedTag linkType) {
-//        this.linkType = linkType;
-//    }
 
     /**
      * @return the printNewick

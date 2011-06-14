@@ -1,4 +1,4 @@
-package pl.edu.agh.ftj.datamining.weka.algorithm;
+package wekatest;
 
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Cobweb;
@@ -12,7 +12,7 @@ import weka.core.Instances;
 /**
  * Klasa odpowiedzialna za komunikacje z biblioteka Weki
  * @author Bartłomiej Wojas, Adrian Kremblewski, Szymon Skupień
- * @version 0.9.9
+ * @version 1.0.0
  */
 public class WekaAlgorithm {
     /**
@@ -26,7 +26,7 @@ public class WekaAlgorithm {
     /**
      * Tablica parametrów wg. których ma funkcjonować algorytm.
      */
-    private String[] options;
+    private String[] options = null;
     /**
      * Obiekt zawierajace dane zwracajane przez Weke
      */
@@ -40,6 +40,26 @@ public class WekaAlgorithm {
      * doszło do błędu (false) czy też nie (true);
      */
     private boolean correct = true;
+    /**
+     * Domyślne opcje dla algorytmu SimpleKMeans
+     */
+    private String[] skmDefault = {"-O"};
+    /**
+     * Domyślne opcje dla algorytmu EM.
+     */
+    private String[] emDefault = {""};
+    /**
+     * Domyślne opcje dla algorytmuHierarchicalClusterer.
+     */
+    private String[] hcDefault = {""};
+    /**
+     * Domyślne opcje dla algorytmu CobWeb.
+     */
+    private String[] cwDefault = {""};
+    /**
+     * Domyślne opcje dla algorytmu FarthestFirst.
+     */
+    private String[] ffDefault = {""};
     /**
      * Tablica z nazwami udostępnianych algorytmów
      */
@@ -145,11 +165,15 @@ public class WekaAlgorithm {
 
         try {
             try {
+                if (options == null) {
+                    throw new Exception("Options == null");
+                }
                 skm.setOptions(options);
             } catch (Exception e) {
                 log("Niepoprawny obiekt Options.");
                 log(e.getMessage());
-                correct = false;
+                log("Algorytm zostanie uruchomiony z domyslnymi opcjami.");
+                skm.setOptions(skmDefault);
             }
             try {
                 skm.buildClusterer(data);
@@ -161,8 +185,11 @@ public class WekaAlgorithm {
                 correct = false;
             }
             //rozpoczęcie budowania obiektu z danymi
-            wekaAnswer.setAssignments(skm.getAssignments());
-            // wekaAnswer.setCapabilities(skm.getCapabilities());
+            try {
+                wekaAnswer.setAssignments(skm.getAssignments());
+            } catch(Exception e) {
+                log(e.getMessage());
+            }
             wekaAnswer.setClusterCentroids(skm.getClusterCentroids());
             wekaAnswer.setClusterNominalCounts(skm.getClusterNominalCounts());
             wekaAnswer.setClusterSizes(skm.getClusterSizes());
@@ -195,11 +222,15 @@ public class WekaAlgorithm {
 
         try {
             try {
+                if (options == null) {
+                    throw new Exception("Options == null");
+                }
                 em.setOptions(options);
             } catch (Exception e) {
                 log("Niepoprawny obiekt Options.");
                 log(e.getMessage());
-                correct = false;
+                log("Algorytm zostanie uruchomiony z domyslnymi opcjami.");
+                em.setOptions(emDefault);
             }
             try {
                 em.buildClusterer(data);
@@ -217,6 +248,7 @@ public class WekaAlgorithm {
             // wekaAnswer.setCapabilities(em.getCapabilities());
             wekaAnswer.setMaxIterations(em.getMaxIterations());
             wekaAnswer.setNumClusters(em.getNumClusters());
+            wekaAnswer.setNumberOfClusters(em.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(em.getRevision());
             wekaAnswer.setClusterer(em);
@@ -240,11 +272,15 @@ public class WekaAlgorithm {
 
         try {
             try {
+                if (options == null) {
+                    throw new Exception("Options == null");
+                }
                 hc.setOptions(options);
             } catch (Exception e) {
                 log("Niepoprawny obiekt Options.");
                 log(e.getMessage());
-                correct = false;
+                log("Algorytm zostanie uruchomiony z domyslnymi opcjami.");
+                hc.setOptions(hcDefault);
             }
             try {
                 hc.buildClusterer(data);
@@ -260,6 +296,7 @@ public class WekaAlgorithm {
             wekaAnswer.setDistanceFunction(hc.getDistanceFunction());
             // wekaAnswer.setLinkType(hc.getLinkType());
             wekaAnswer.setNumClusters(hc.getNumClusters());
+            wekaAnswer.setNumberOfClusters(hc.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setPrintNewick(hc.getPrintNewick());
             wekaAnswer.setRevision(hc.getRevision());
@@ -286,19 +323,23 @@ public class WekaAlgorithm {
 
         try {
             try {
+                if (options == null) {
+                    throw new Exception("Options == null");
+                }
                 cw.setOptions(options);
+            } catch (Exception e) {
+                log("Niepoprawny obiekt Options.");
+                log(e.getMessage());
+                log("Algorytm zostanie uruchomiony z domyslnymi opcjami.");
+                cw.setOptions(cwDefault);
+            }
+            try {
+                cw.buildClusterer(data);
                 for (Instance current : data)
                     cw.updateClusterer(current);
                 cw.updateFinished();
                 eval.setClusterer(cw);
                 eval.evaluateClusterer(data);
-            } catch (Exception e) {
-                log("Niepoprawny obiekt Options.");
-                log(e.getMessage());
-                correct = false;
-            }
-            try {
-                cw.buildClusterer(data);
             } catch (Exception e) {
                 log("Niepoprawny obiekt z danymi.");
                 log(e.getMessage());
@@ -314,6 +355,8 @@ public class WekaAlgorithm {
             wekaAnswer.setGraphType(cw.graphType());
             wekaAnswer.setClusterer(cw);
             wekaAnswer.setEval(eval);
+            wekaAnswer.setNumClusters(cw.numberOfClusters());
+            wekaAnswer.setNumberOfClusters(cw.numberOfClusters());
         } catch (Exception e) {
             log(e.getMessage());
             correct = false;
@@ -333,11 +376,15 @@ public class WekaAlgorithm {
 
         try {
             try {
+                if (options == null) {
+                    throw new Exception("Options == null");
+                }
                 ff.setOptions(options);
             } catch (Exception e) {
                 log("Niepoprawny obiekt Options.");
                 log(e.getMessage());
-                correct = false;
+                log("Algorytm zostanie uruchomiony z domyslnymi opcjami.");
+                ff.setOptions(ffDefault);
             }
             try {
                 ff.buildClusterer(data);
@@ -352,6 +399,7 @@ public class WekaAlgorithm {
             wekaAnswer.setNumClusters(ff.getNumClusters());
             wekaAnswer.setOptions(options);
             wekaAnswer.setRevision(ff.getRevision());
+            wekaAnswer.setNumClusters(ff.numberOfClusters());
             wekaAnswer.setNumberOfClusters(ff.numberOfClusters());
             wekaAnswer.setClusterer(ff);
             wekaAnswer.setEval(eval);
