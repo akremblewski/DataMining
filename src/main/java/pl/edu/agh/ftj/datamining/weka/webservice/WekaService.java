@@ -7,6 +7,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.GET;
@@ -36,8 +37,8 @@ import weka.core.converters.ConverterUtils.DataSource;
 public class WekaService implements IWekaService {
 
     //Adres do WSDL webservisu ustawiony odgornie
-    @WebServiceRef(wsdlLocation = "http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService?wsdl")
-    private DataAccessService service;
+   @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/axis2/services/DataAccessService.wsdl")
+	private DataAccessService service;
 
     private static final Logger log = Logger.getLogger("WekaRESTServiceLog");
 
@@ -82,37 +83,68 @@ public class WekaService implements IWekaService {
     @Path("/runAlgorithm")
     public Response runAlgorithm(@QueryParam("algorithmType") Integer algorithmType,/* @QueryParam("location") String location, */@QueryParam("id") String id, @QueryParam("table") String table, @QueryParam("options") String options) {
          
-        //brakuje jednej z opcji
-        if(algorithmType == null || id == null || table == null || options == null){
-                
-                final WekaAnswer wekaAnswer = new WekaAnswer();
-
-                //TODO:ustawic dokladniejsze info
-                wekaAnswer.setInfo("Brakuje jednej z opcji");
-             
-                //serializuje obiekt
-                byte[] bytes = wekaAnswer2Byte(wekaAnswer);
-
-               
-                //wysylka
-                return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
+       
+        int parm = checkParameters(algorithmType, id, table);
+        WekaAnswer wekaAnswer = new WekaAnswer();
+        byte[] bytes = null;
+        switch(parm){
+            case (1):
+                wekaAnswer.setInfo("Brakuje typu algorytmu");
+                break;
+            case (3):
+                wekaAnswer.setInfo("Brakuje id bazy danych");
+                break;
+            case (4):
+                wekaAnswer.setInfo("Brakuje typu algorytmu oraz id bazy danych");
+                break;
+            case (5):
+                wekaAnswer.setInfo("Brakuje nazwy tabeli");
+                break;
+            case (6):
+                 wekaAnswer.setInfo("Brakuje typu algorytmu oraz nazwy tabeli");
+                 break;
+            case (8):
+                 wekaAnswer.setInfo("Brakuje id oraz nazwy tabeli");
+                 break;
+            case (9):
+                 wekaAnswer.setInfo("Brakuje typu algorytmu, id oraz nazwy tabeli");
+                 break;
+            default:
+                break;
         }
-        // zeby nie bylo null, wstawiam dane testowe
-        String result = pogoda;
+        //jest jakis brak parametru
+        if(parm != 0){
+            wekaAnswer.setCorrect(false);
+            //serializuje obiekt
+            bytes = wekaAnswer2Byte(wekaAnswer);
+            //wysylka
+            return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
+        }
+
+        //odpowiedz z DB
+        String result = null;
         try {
             
             //DataAccessService service = new DataAccessService(new URL(location), new QName("DataAccess"));
-            
-            DataAccessServicePortType port = service.getDataAccessServiceHttpSoap11Endpoint();
-
+          
+           DataAccessServicePortType port = service.getDataAccessServiceHttpSoap12Endpoint();
+           
             //wywoluje zdalna metode WebServisu DbAPI
             result = port.getData(id, table);
-            //System.out.println("Result = "+result);
+            
         } catch (Exception ex) {
             // cos poszlo nietak
-            log.log(Level.ALL, "DataAccess ERROR!!!!!!!!!!");
+            log.log(Level.ALL, "DataAccess ERROR!");
         }
-
+     
+        if(result == null){
+            wekaAnswer.setInfo("Bład w polaczeniu z bazą danych");
+            wekaAnswer.setCorrect(false);
+            //serializuje obiekt
+            bytes = wekaAnswer2Byte(wekaAnswer);
+            //wysylka
+            return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
+        }
         // String to Instances
         Instances data = getInstancesFromString(result);
 
@@ -129,11 +161,13 @@ public class WekaService implements IWekaService {
         alg.setOptions(opt);
         alg.run();
 
+
         //pobieram odpowiedz
-        final WekaAnswer wekaAnswer = alg.getData();
+        wekaAnswer = null;
+        wekaAnswer = alg.getData();
 
         //serializuje obiekt
-        byte[] bytes = wekaAnswer2Byte(wekaAnswer);
+        bytes = wekaAnswer2Byte(wekaAnswer);
         
         //wysylka
         return Response.ok(bytes, MediaType.APPLICATION_OCTET_STREAM).build();
@@ -180,10 +214,21 @@ public class WekaService implements IWekaService {
      */
     private String[] parseStringOptions(String options){
         String[] retStr = options.split(";");
+        ArrayList<String> options_temp = new ArrayList<String>();
+
         for(int i=0; i<retStr.length; i++){
-            retStr[i] = "-"+retStr[i];
+            String[] retStr2 = retStr[i].split(" ");
+            options_temp.add("-" + retStr2[0]);
+            if(retStr2.length==2)
+                options_temp.add(retStr2[1]);
+
         }
-        return retStr;
+        String [] optt = new String[options_temp.size()];
+        for(int i=0; i<optt.length; i++){
+            optt[i] = options_temp.get(i);
+            System.out.println(optt[i]);
+        }
+        return optt;
     }
 
 
@@ -208,29 +253,27 @@ public class WekaService implements IWekaService {
         return bytes;
     }
 
-/**
- * Dane Testowe
- */
-      public String pogoda = "@relation Test\n"
-            + "@attribute pogoda {slonecznie, pochmurno, deszczowo}\n"
-            + "@attribute temperatura real\n"
-            + "@attribute wilgotnosc real\n"
-            + "@attribute wiatr {TRUE, FALSE}\n"
-            + "@attribute zabawa {tak, nie}\n\n"
-            + "@data\n"
-            + "slonecznie,85,85,FALSE,nie\n"
-            + "slonecznie,80,90,TRUE,nie\n"
-            + "pochmurno,83,86,FALSE,tak\n"
-            + "deszczowo,70,96,FALSE,tak\n"
-            + "deszczowo,68,80,FALSE,tak\n"
-            + "deszczowo,65,70,TRUE,nie\n"
-            + "pochmurno,64,65,TRUE,tak\n"
-            + "slonecznie,72,95,FALSE,nie\n"
-            + "slonecznie,69,70,FALSE,tak\n"
-            + "deszczowo,75,80,FALSE,tak\n"
-            + "slonecznie,75,70,TRUE,tak\n"
-            + "pochmurno,72,90,TRUE,tak\n"
-            + "pochmurno,81,75,FALSE,tak\n"
-            + "deszczowo,71,91,TRUE,nie";
+    /**
+     * Funkcja sprawdza poprawnosc otrzymanych parametrow
+     * @param algorithmType
+     * @param id
+     * @param table
+     * @param options
+     * @return wartosc: 0=ok, 1=brak algorithmType, 3=brak id, 5=brak table.
+     * Jesli brakuje 2 lub wiecej parametrow warstosci sie sumuja. 
+     */
+    private int checkParameters(Integer algorithmType, String id, String table){
+        int ret = 0;
+        if(algorithmType == null){
+            ret += 1;
+        }
+        if(id == null){
+            ret += 3;
+        }
+        if(table == null){
+            ret += 5;
+        }
+        return ret;
+    }
 
 }

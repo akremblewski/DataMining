@@ -60,8 +60,8 @@ public class WekaServiceTest {
     @Test
     public void testRunAlgorithm() throws IOException, ClassNotFoundException {
 
-        WekaAnswer response = client.runAlgorithm(1, "id", "table", "O");
-        Response expResp = new WekaService().runAlgorithm(1, "id", "table", "O");
+        WekaAnswer response = client.runAlgorithm(1, "3", "cpu", "O");
+        Response expResp = new WekaService().runAlgorithm(1, "3", "cpu", "O");
         byte[] expRespByte = (byte[]) expResp.getEntity();
         WekaAnswer expResponse = new WekaAnswer();
         try {

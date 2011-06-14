@@ -1,4 +1,4 @@
-package wekatest;
+package pl.edu.agh.ftj.datamining.weka.algorithm;
 
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.Cobweb;
