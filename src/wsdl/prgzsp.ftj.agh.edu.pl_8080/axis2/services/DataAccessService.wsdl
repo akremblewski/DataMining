@@ -124,13 +124,13 @@
     </wsdl:binding>
     <wsdl:service name="DataAccessService">
         <wsdl:port name="DataAccessServiceHttpSoap11Endpoint" binding="ns:DataAccessServiceSoap11Binding">
-            <soap:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap11Endpoint/"/>
+            <soap:address location="http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="DataAccessServiceHttpSoap12Endpoint" binding="ns:DataAccessServiceSoap12Binding">
-            <soap12:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap12Endpoint/"/>
+            <soap12:address location="http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService.DataAccessServiceHttpSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="DataAccessServiceHttpEndpoint" binding="ns:DataAccessServiceHttpBinding">
-            <http:address location="http://localhost:8080/axis2/services/DataAccessService.DataAccessServiceHttpEndpoint/"/>
+            <http:address location="http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService.DataAccessServiceHttpEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-   <system systemId="http://localhost:8080/axis2/services/DataAccessService?wsdl" uri="wsdl/localhost_8080/axis2/services/DataAccessService.wsdl"/>
-    
+   
+    <system systemId="http://prgzsp.ftj.agh.edu.pl:8080/axis2/services/DataAccessService?wsdl" uri="wsdl/prgzsp.ftj.agh.edu.pl_8080/axis2/services/DataAccessService.wsdl"/>
 </catalog>

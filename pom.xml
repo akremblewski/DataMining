@@ -53,16 +53,6 @@
             <artifactId>junit</artifactId>
             <version>4.5</version>
         </dependency>
-          <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2</artifactId>
-            <version>1.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-adb</artifactId>
-            <version>1.5.4</version>
-        </dependency>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>webservices-rt</artifactId>
@@ -101,7 +91,23 @@
                     </webResources>
                 </configuration>
             </plugin>
-             <plugin>
+             
+
+              <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <doctitle>My API for ${project.name} ${project.version}</doctitle> <!-- Used by javadoc:javadoc goal -->
+          <windowtitle>My API for ${project.name} ${project.version}</windowtitle> <!-- Used by javadoc:javadoc goal -->
+
+          <testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle> <!-- Used by javadoc:test-javadoc goal -->
+          <testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle> <!-- Used by javadoc:test-javadoc goal -->
+           <show>public</show>
+                    <charset>UTF-8</charset>
+        </configuration>
+      </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <version>1.10</version>
@@ -112,7 +118,7 @@
                         </goals>
                         <configuration>
                             <wsdlFiles>
-                                <wsdlFile>localhost_8080/axis2/services/DataAccessService.wsdl</wsdlFile>
+                                <wsdlFile>prgzsp.ftj.agh.edu.pl_8080/axis2/services/DataAccessService.wsdl</wsdlFile>
                             </wsdlFiles>
                             <staleFile>${project.build.directory}/jaxws/stale/DataAccessService.stale</staleFile>
                         </configuration>
@@ -133,39 +139,6 @@
                     <verbose>true</verbose>
                     <extension>true</extension>
                     <catalog>${basedir}/src/jax-ws-catalog.xml</catalog>
-                </configuration>
-            </plugin>
-      
-
-              <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8</version>
-        <configuration>
-          <doctitle>My API for ${project.name} ${project.version}</doctitle> <!-- Used by javadoc:javadoc goal -->
-          <windowtitle>My API for ${project.name} ${project.version}</windowtitle> <!-- Used by javadoc:javadoc goal -->
-
-          <testDoctitle>My Test API for ${project.name} ${project.version}</testDoctitle> <!-- Used by javadoc:test-javadoc goal -->
-          <testWindowtitle>My Test API for ${project.name} ${project.version}</testWindowtitle> <!-- Used by javadoc:test-javadoc goal -->
-           <show>public</show>
-                    <charset>UTF-8</charset>
-        </configuration>
-      </plugin>
-<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>src</directory>
-                            <targetPath>WEB-INF</targetPath>
-                            <includes>
-                                <include>jax-ws-catalog.xml</include>
-                                <include>wsdl/**</include>
-                            </includes>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
         </plugins>

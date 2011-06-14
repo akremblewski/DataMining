@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,14 +15,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceRef;
-import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService;
-import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessServicePortType;
 import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAlgorithm;
 import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAnswer;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
+import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService;
+import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessServicePortType;
+
 
 /**
  * Klasa implementująca inferfejs Webservisu dla Weki
@@ -36,9 +34,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 @Path("/")
 public class WekaService implements IWekaService {
 
-    //Adres do WSDL webservisu ustawiony odgornie
-   @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/axis2/services/DataAccessService.wsdl")
-	private DataAccessService service;
+  
 
     private static final Logger log = Logger.getLogger("WekaRESTServiceLog");
 
@@ -125,12 +121,13 @@ public class WekaService implements IWekaService {
         String result = null;
         try {
             
-            //DataAccessService service = new DataAccessService(new URL(location), new QName("DataAccess"));
-          
-           DataAccessServicePortType port = service.getDataAccessServiceHttpSoap12Endpoint();
+
            
-            //wywoluje zdalna metode WebServisu DbAPI
-            result = port.getData(id, table);
+                DataAccessService service = new DataAccessService();
+                DataAccessServicePortType port = service.getDataAccessServiceHttpSoap11Endpoint();
+
+                result = port.getData(id, table);
+
             
         } catch (Exception ex) {
             // cos poszlo nietak
