@@ -19,8 +19,6 @@ import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAlgorithm;
 import pl.edu.agh.ftj.datamining.weka.algorithm.WekaAnswer;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
-import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService;
-import pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessServicePortType;
 
 
 /**
@@ -119,20 +117,19 @@ public class WekaService implements IWekaService {
 
         //odpowiedz z DB
         String result = null;
-        try {
-            
 
-           
-                DataAccessService service = new DataAccessService();
-                DataAccessServicePortType port = service.getDataAccessServiceHttpSoap11Endpoint();
 
-                result = port.getData(id, table);
-
-            
+        try { // Call Web Service Operation
+            pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService service = new pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessService();
+            pl.edu.agh.ftj.datamining.dbapi.webservice.DataAccessServicePortType port = service.getDataAccessServiceHttpSoap11Endpoint();
+          
+            result = port.getData(id, table);
+           // System.out.println("Result = "+result);
         } catch (Exception ex) {
-            // cos poszlo nietak
-            log.log(Level.ALL, "DataAccess ERROR!");
+            // TODO handle custom exceptions here
         }
+
+
      
         if(result == null){
             wekaAnswer.setInfo("Bład w polaczeniu z bazą danych");
