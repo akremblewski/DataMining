@@ -220,7 +220,7 @@ public class WekaService implements IWekaService {
         String [] optt = new String[options_temp.size()];
         for(int i=0; i<optt.length; i++){
             optt[i] = options_temp.get(i);
-            System.out.println(optt[i]);
+           // System.out.println(optt[i]);
         }
         return optt;
     }
